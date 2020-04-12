@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ToDoListApp</string>
+    <string name="new_reminder">New Reminder</string>
+</resources>
