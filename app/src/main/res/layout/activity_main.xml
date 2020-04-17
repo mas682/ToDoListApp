@@ -31,7 +31,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginBottom="16dp"
         android:text="@string/new_reminder"
-        android:textColor="@color/brightBlue"
+        android:textColor="@color/colorAccent"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/floatingActionButton2" />
@@ -42,7 +42,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="14dp"
-        android:buttonTint="@color/brightBlue"
+        android:buttonTint="@color/colorAccent"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -56,25 +58,45 @@
         android:background="@null"
         android:inputType="textMultiLine"
         android:textColor="@color/design_default_color_background"
-        android:textColorHighlight="@color/brightBlue"
+        android:textColorHighlight="@color/colorAccent"
         android:textColorHint="@color/design_default_color_error"
-        android:textColorLink="@android:color/darker_gray"
+        android:textColorLink="@color/colorAccent"
         android:textCursorDrawable="?android:attr/textCursorDrawable"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/floatingActionButton"
         app:layout_constraintStart_toEndOf="@+id/radioButton"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:clickable="true"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:fabCustomSize="30dp"
+        app:fabSize="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:maxImageSize="30dp"
+        app:rippleColor="@color/colorPrimaryDark"
+        app:srcCompat="@drawable/baseline_info_24" />
+
 
     <View
         android:id="@+id/divider"
         android:layout_width="0dp"
         android:layout_height="3dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:background="@color/colorAccent"
+        android:background="@color/colorGray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/radioButton"
         app:layout_constraintTop_toBottomOf="@+id/editText" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
