@@ -73,7 +73,9 @@ public class MainActivity extends AppCompatActivity {
         //int buttonColor = Color.parseColor(String.valueOf(ContextCompat.getColor(MainActivity.this, R.color.brightBlue)));
         //set textcolor to radioButton
         radioButton.setButtonTintList(ColorStateList.valueOf(buttonColor));
-        divider.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
+        radioButton.setScaleX((float)1.5);
+        radioButton.setScaleY((float)1.5);
+        divider.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorGray));
         divider.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3,
                 getResources().getDisplayMetrics())));
         // add the view to the activity main layout
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         set.connect(radioButton.getId(), ConstraintSet.TOP, lastDiv.getId(), ConstraintSet.BOTTOM, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
                 getResources().getDisplayMetrics()));
         // divider
-        set.connect(divider.getId(), ConstraintSet.TOP, textView.getId(), ConstraintSet.BOTTOM, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0,
+        set.connect(divider.getId(), ConstraintSet.TOP, textView.getId(), ConstraintSet.BOTTOM, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8,
                 getResources().getDisplayMetrics()));
         set.connect(divider.getId(), ConstraintSet.START, radioButton.getId(), ConstraintSet.END, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8,
                 getResources().getDisplayMetrics()));
