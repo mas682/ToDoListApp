@@ -1,37 +1,23 @@
 package com.example.todolistapp;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 
-import android.app.Notification;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
-import com.google.android.material.drawable.DrawableUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import org.w3c.dom.Attr;
-
-import java.util.jar.Attributes;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +25,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+
+    /** Called when the user taps the Send button */
+    public void setDetails(View view) {
+        Intent intent = new Intent(this, DetailsActivity.class);
+       // EditText editText = (EditText) findViewById(R.id.editText);
+        //String message = editText.getText().toString();
+        //intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
     }
 
     /** Called when the user taps the Send button */
@@ -104,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         int colorPrimaryDark = Color.parseColor("#000000");
         // set the background tint
         infoButton.setBackgroundTintList(ColorStateList.valueOf(colorPrimaryDark));
+        infoButton.setRippleColor(colorPrimaryDark);
         // set the button as clickable
         infoButton.setClickable(true);
         // set the size to 30dp
