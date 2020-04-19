@@ -98,5 +98,21 @@
         app:layout_constraintStart_toEndOf="@+id/radioButton"
         app:layout_constraintTop_toBottomOf="@+id/editText" />
 
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="112dp"
+        android:layout_marginEnd="16dp"
+        android:text="Switch"
+        android:textColor="@color/colorGray"
+        android:theme="@style/SwitchCompatStyle"
+        android:thumb="@drawable/switch_circle_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:track="@drawable/switch_track" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

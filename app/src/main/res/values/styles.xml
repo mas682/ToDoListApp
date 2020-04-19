@@ -8,4 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="SwitchCompatStyle" >
+        <item name="thumbTint">@color/thumb_color</item>
+        <item name="trackTint">@color/switch_color</item>
+    </style>
+
 </resources>
