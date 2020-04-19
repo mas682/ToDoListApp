@@ -7,7 +7,7 @@
             android:tint="@color/switch_color">
             <corners android:radius="30dp" />
             <solid android:color="@color/switch_color" />
-            <size android:height="40dp" />
+            <size android:height="30dp" />
         </shape>
     </item>
 </layer-list>

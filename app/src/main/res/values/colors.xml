@@ -7,4 +7,7 @@
     <color name="colorDarkGray">#262626</color>
     <color name="colorLightDarkGray">#333333</color>
     <color name="colorDarkDarkGray">#1a1a1a</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="switchGray">#666666</color>
+    <color name="switchGreen">#47d147</color>
 </resources>

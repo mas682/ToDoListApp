@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="@color/colorGray"
+    <!--
+         - this is used for the switch on the details page
+         - this changes the color from color accent to colorGray
+         - when the switch is checked
+    -->
+    <item android:color="@color/switchGreen"
         android:state_checked="true" />
-    <item android:color="@color/colorAccent"/>
+    <item android:color="@color/switchGray"/>
 </selector>
