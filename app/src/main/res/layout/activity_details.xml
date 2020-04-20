@@ -76,7 +76,7 @@
         <View
             android:id="@+id/divider2"
             android:layout_width="match_parent"
-            android:layout_height=".3dp"
+            android:layout_height=".5dp"
             android:background="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -130,7 +130,7 @@
         <View
             android:id="@+id/divider4"
             android:layout_width="match_parent"
-            android:layout_height=".3dp"
+            android:layout_height=".5dp"
             android:layout_marginTop="8dp"
             android:background="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
@@ -152,7 +152,7 @@
         <View
             android:id="@+id/divider5"
             android:layout_width="match_parent"
-            android:layout_height=".3dp"
+            android:layout_height=".5dp"
             android:background="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -179,7 +179,7 @@
         <View
             android:id="@+id/divider6"
             android:layout_width="match_parent"
-            android:layout_height=".3dp"
+            android:layout_height=".5dp"
             android:layout_marginTop="8dp"
             android:background="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
@@ -202,7 +202,7 @@
         <View
             android:id="@+id/locationBoxDivTop"
             android:layout_width="match_parent"
-            android:layout_height=".3dp"
+            android:layout_height=".5dp"
             android:background="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -229,12 +229,80 @@
         <View
             android:id="@+id/locationBoxDivBottom"
             android:layout_width="match_parent"
-            android:layout_height=".3dp"
+            android:layout_height=".5dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="1dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@id/locationBox"
+            app:layout_constraintEnd_toEndOf="@id/locationBox"
+            app:layout_constraintStart_toStartOf="@id/locationBox"
+            app:layout_constraintTop_toBottomOf="@id/locationSwitch" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/priorityBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@color/colorDarkGray"
+        android:elevation="@dimen/cardview_default_elevation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/locationBox">
+
+        <View
+            android:id="@+id/priorityBoxDivTop"
+            android:layout_width="match_parent"
+            android:layout_height=".5dp"
+            android:layout_marginTop="1dp"
             android:background="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/locationSwitch" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/priorityTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:text="Priority"
+            android:textAlignment="textStart"
+            android:textColor="@color/colorGray"
+            android:textSize="17sp"
+            app:layout_constraintEnd_toStartOf="@id/priorityActionButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/priorityActionButton"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/colorDarkGray"
+            android:clickable="true"
+            app:backgroundTint="@color/colorDarkGray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/priorityTextView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:srcCompat="@drawable/baseline_keyboard_arrow_right_24" />
+
+        <View
+            android:id="@+id/priorityBoxDivBottom"
+            android:layout_width="match_parent"
+            android:layout_height=".5dp"
+            android:layout_marginBottom="2dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/priorityActionButton" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
