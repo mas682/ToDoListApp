@@ -76,6 +76,7 @@
         android:backgroundTint="@color/colorPrimaryDark"
         android:clickable="true"
         android:onClick="setDetails"
+        android:tag="3"
         app:backgroundTint="@color/colorPrimaryDark"
         app:fabCustomSize="30dp"
         app:layout_constraintEnd_toEndOf="parent"
