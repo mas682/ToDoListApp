@@ -12,6 +12,8 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // design decision to not save changes unless user hits done or back button
+        // if they close the app, results not saved
         setContentView(R.layout.activity_details);
         // get the intent that was sent over
         Intent intent = getIntent();
@@ -25,6 +27,8 @@ public class DetailsActivity extends AppCompatActivity {
         Log.i("inside details", "value " + reminder);
 
     }
+
+
 
     @Override
     public void onBackPressed() {
