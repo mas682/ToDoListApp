@@ -27,6 +27,8 @@ import java.io.FileOutputStream;
 
 public class MainActivity extends AppCompatActivity {
 
+    static final int RESULT_CODE = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +91,16 @@ public class MainActivity extends AppCompatActivity {
         // for testing
         Log.i("reminder", "in main: " + reminder.getText());
         // call the activity with the intent
-        startActivity(intent);
+        startActivityForResult(intent, RESULT_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        String messageReturned = data.getStringExtra("message_return");
+        System.out.println("Result code = " + resultCode);
+        System.out.println("Message returned = " + messageReturned);
     }
 
     /** Called when the user taps the Send button */

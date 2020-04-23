@@ -23,5 +23,14 @@ public class DetailsActivity extends AppCompatActivity {
         text.setText(reminder);
         // for testing
         Log.i("inside details", "value " + reminder);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intentWithResult = new Intent();
+        intentWithResult.putExtra("message_return", "This data is returned when user click button in target activity.");
+        setResult(1, intentWithResult);
+        finish();
     }
 }
