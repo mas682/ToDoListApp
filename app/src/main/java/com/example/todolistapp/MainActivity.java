@@ -10,10 +10,8 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -25,14 +23,12 @@ import android.widget.RadioButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,40 +38,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*
-        if(reminders == null)
-        {
-            boolean opened = openRemindersFile();
-            // if no file found, intitialize the reminders arraylist with a empty reminder
-            if(!opened)
-            {
-                reminders = new ArrayList<Reminder>(10);
-                Reminder reminder1 = new Reminder("");
-                reminders.add(reminder1);
-            }
-        }
-         */
         /* TODO
             left off making it so that you could pass the text of a reminder to the details page
             by getting it out of the arraylist
             things to fix/handle:
-            1. Saving the reminders
-                a. need to save on app close to a file
-                    - need to handle looping through reminders and printing them to the file
-                        - done but not tested
-                    - also remove save in onCreate that is for testing
-                b. also need to save whenever the text is changed for one of the reminders
-                        - set up a method to pull these, but not tested
-                    - may want to save any time this view is stopped
-                    - also want to UPDATE on return from details activity
             2. may want to use other threads for some of this stuff?
             3. start messing with date/time notifications
             4. then deal with location
-
          */
         setContentView(R.layout.activity_main);
-        //EditText t = (EditText)findViewById(R.id.editText);
-        //String text = "";
         // this currently only works when changing the rotation of the screen
         /*
         if ((savedInstanceState != null) && (savedInstanceState.getString("reminder1") != null)) {
@@ -83,25 +54,16 @@ public class MainActivity extends AppCompatActivity {
             Log.i(" On Create", "text value: " + text);
             t.setText(text);
         }
-
          */
         boolean opened = openRemindersFile();
         if(!opened)
         {
-            // this should work as it will just create a empty reminder
             addReminder("");
         }
         // consider using asynctask to load data?
-        /*
-        if(reminders.size() > 0)
-        {
-            t.setText(reminders.get(0).getReminder());
-        }
-        */
         int count = 0;
         while(count < reminders.size())
         {
-            Log.i("Size: ", "reminders size: " + reminders.size());
             addNewReminderElement(reminders.get(count).getReminder(), count);
             count++;
         }
@@ -190,8 +152,6 @@ public class MainActivity extends AppCompatActivity {
         reminders.add(tempReminder);
     }
 
-
-
     public boolean saveReminders()
     {
         if(reminders == null)
@@ -203,10 +163,10 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
         // get the updated values before saving them
-        updateReminders();
+        // do not think this is needed
+        //updateReminders();
         boolean success = false;
         String file = "reminders";
-        //String data= "reminder:reminder1;notes:abcd;\nreminder:reminder2;notes:;\nreminder:reminder3;notes:abcdefg;\n";
         String data = "";
         // combine the data into one string
         for(int i = 0; i < reminders.size(); i++)
@@ -256,7 +216,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
@@ -268,48 +227,55 @@ public class MainActivity extends AppCompatActivity {
         saveReminders();
     }
 
-
     private void fail(String sdcard_not_available) {
     }
 
     public void setDetails(View view) {
         // get the intent to pass data to the details activity
         Intent intent = new Intent(this, DetailsActivity.class);
-        // have the info button set to the index of the edit text view
-        // get the index of the edit text
-        // in the future, this will be the index into the array/list to get the information
-        //int elem = Integer.parseInt((String)view.getTag());
+        // get the index into the Reminders ArrayList
         int index = Integer.parseInt((String)view.getTag());
-        // all for testing
-        //ConstraintLayout parentLayout = (ConstraintLayout) findViewById(R.id.activity_main);
-        //EditText reminder = (EditText)parentLayout.getChildAt(elem);
-        // this will be changed to pass values from reminder object you create
+        // pass the reminder text
         intent.putExtra("reminder", reminders.get(index).getReminder());
+        // pass the index into the Reminders array as this is needed when returning
         intent.putExtra("index", index);
         // call the activity with the intent
         startActivityForResult(intent, RESULT_CODE);
+    }
+
+    // save the reminders when the back button is pushed
+    @Override
+    public void onBackPressed() {
+        saveReminders();
+        finish();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
+        // get the value of the reminder field that is returned
         String messageReturned = data.getStringExtra("reminder_text");
+        // get the index into the Reminders array
         int index = data.getIntExtra("index", -1);
         if(index != -1)
         {
+            // update the reminder in the array
             reminders.get(index).setReminder(messageReturned);
+            // get the view id from the reminder
             EditText tempView = (EditText)findViewById(reminders.get(index).getTextId());
+            // update the view
             tempView.setText(messageReturned);
         }
+        // for testing
         System.out.println("Result code = " + resultCode);
-        System.out.println("Message returned = " + messageReturned);
     }
 
     /** Called when the user taps the Send button */
     public void addNewReminderElement(View view) {
         // add a new reminder to the array
         addReminder("");
+        int index = reminders.size() - 1;
         // Get the activity main constraint layout
         ConstraintLayout parentLayout = (ConstraintLayout) findViewById(R.id.activity_main);
         int numViewElems = parentLayout.getChildCount();
@@ -319,83 +285,20 @@ public class MainActivity extends AppCompatActivity {
         View lastDiv = parentLayout.getChildAt(lastDivider);
         // create a new EditText view
         EditText textView = new EditText(MainActivity.this);
+        // set the EditText view's attirbutes
+        setEditTextValues(textView, index);
         // create a new RadioButton view
         RadioButton radioButton = new RadioButton(MainActivity.this);
+        // set the RadioButton view's attributes
+        setRadioButtonValues(radioButton);
         // create a new FloatingAction view
         FloatingActionButton infoButton = new FloatingActionButton(MainActivity.this);
+        // set the FloatingActionButton view's attributes
+        setInfoButtonValues(infoButton, index);
         // create a new View for the divider
         View divider = new View(MainActivity.this);
-        // get a Id for the new text view
-        textView.setId(View.generateViewId());
-        // get a Id for the new radio view
-        radioButton.setId(View.generateViewId());
-        // get a Id for the new info button
-        infoButton.setId(View.generateViewId());
-        // get a Id for the new divider
-        divider.setId(View.generateViewId());
-        // set the width and height of the new view
-        textView.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT,
-                ConstraintLayout.LayoutParams.WRAP_CONTENT));
-        // set the type of the text view
-        textView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        // set the padding for the textview
-        textView.setPadding(0, 0, 0, 0);
-        // set the background of the textview
-        textView.setBackground(null);
-        // set the text color to white
-        textView.setTextColor(Color.WHITE);
-        // set the text size to 18sp
-        textView.setTextSize(18);
-        // add a new listener to the textView
-        textView.addTextChangedListener(new TextWatcherExtended(reminders.size() - 1) {
-            @Override
-            public void afterTextChanged(Editable s) {
-                Log.i("Text", s.toString());
-                reminders.get(this.getIndex()).setReminder(s.toString());
-            }
-        });
-        // set the radio buttons width and height
-        radioButton.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        // get the value of the color accent
-        int colorAccent = Color.parseColor("#0078FF");
-       // int buttonColor = Color.parseColor(String.valueOf(ContextCompat.getColor(MainActivity.this, R.color.brightBlue)));
-        //set the color of the button
-        radioButton.setButtonTintList(ColorStateList.valueOf(colorAccent));
-        // set the size of the button
-        radioButton.setScaleX((float)1.5);
-        radioButton.setScaleY((float)1.5);
-        // set the height and width for the info button
-        infoButton.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT));
-        // get the color black
-        int colorPrimaryDark = Color.parseColor("#000000");
-        // set the background tint
-        infoButton.setBackgroundTintList(ColorStateList.valueOf(colorPrimaryDark));
-        infoButton.setRippleColor(colorPrimaryDark);
-        // set the button as clickable
-        infoButton.setClickable(true);
-        // set the size to 30dp
-        infoButton.setCustomSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30,
-                getResources().getDisplayMetrics()));
-        // set the image source
-        infoButton.setImageResource(R.drawable.baseline_info_24);
-        // make the icon scale to the size of the button
-        infoButton.setScaleType(ImageView.ScaleType.CENTER);
-        // set the tag to the number of reminders in the reminders array
-        infoButton.setTag(Integer.toString(reminders.size()));
-        // set the function to call when clicked
-        infoButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                setDetails(v);
-            }
-        });
-        // set the tag to the index into the reminders arraylist
-        infoButton.setTag(Integer.toString(reminders.size() - 1));
-        // set the color of the divider
-        divider.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorGray));
-        // set the height and width of the divider
-        divider.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2,
-                getResources().getDisplayMetrics())));
+        // set the View's attributes
+        setDividerViewValues(divider);
         // add the view to the activity main layout
         // the numViewElems is the index at which to add the view
         parentLayout.addView(radioButton, numViewElems);
@@ -432,7 +335,6 @@ public class MainActivity extends AppCompatActivity {
         set.applyTo(parentLayout);
     }
 
-
     /*
         This method adds a reminder with a string.
         This is called by onCreate to initialize the view.
@@ -456,94 +358,28 @@ public class MainActivity extends AppCompatActivity {
             // get the last added divider view
             lastDiv = parentLayout.getChildAt(lastDivider);
             lastViewId = lastDiv.getId();
-            Log.i("addReminder", "Num views: " + numViewElems);
         }
         else
         {
-            Log.i("addReminder", "Num views: " + numViewElems);
             // if this is the first view being added, just use the parents id
             lastViewId = parentLayout.getId();
         }
         // create a new EditText view
         EditText textView = new EditText(MainActivity.this);
+        // set the EditText view's attributes
+        setEditTextValues(textView, index);
         // create a new RadioButton view
         RadioButton radioButton = new RadioButton(MainActivity.this);
+        // set the RadioButton view's attributes
+        setRadioButtonValues(radioButton);
         // create a new FloatingAction view
         FloatingActionButton infoButton = new FloatingActionButton(MainActivity.this);
+        // set the FloatingActionButton view's attributes
+        setInfoButtonValues(infoButton, index);
         // create a new View for the divider
         View divider = new View(MainActivity.this);
-        // get a Id for the new text view
-        textView.setId(View.generateViewId());
-        // get a Id for the new radio view
-        radioButton.setId(View.generateViewId());
-        // get a Id for the new info button
-        infoButton.setId(View.generateViewId());
-        // get a Id for the new divider
-        divider.setId(View.generateViewId());
-        // set the width and height of the new view
-        textView.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT,
-                ConstraintLayout.LayoutParams.WRAP_CONTENT));
-        // set the type of the text view
-        textView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        // set the padding for the textview
-        textView.setPadding(0, 0, 0, 0);
-        // set the background of the textview
-        textView.setBackground(null);
-        // set the text color to white
-        textView.setTextColor(Color.WHITE);
-        // set the text size to 18sp
-        textView.setTextSize(18);
-        // set the text to the passed string
-        textView.setText(text);
-        textView.addTextChangedListener(new TextWatcherExtended(index) {
-            @Override
-            public void afterTextChanged(Editable s) {
-                Log.i("Text", s.toString());
-                reminders.get(this.getIndex()).setReminder(s.toString());
-            }
-        });
-        // set the id for the text element in the reminder array
-        reminders.get(index).setTextId(textView.getId());
-        // set the radio buttons width and height
-        radioButton.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        // get the value of the color accent
-        int colorAccent = Color.parseColor("#0078FF");
-        // int buttonColor = Color.parseColor(String.valueOf(ContextCompat.getColor(MainActivity.this, R.color.brightBlue)));
-        //set the color of the button
-        radioButton.setButtonTintList(ColorStateList.valueOf(colorAccent));
-        // set the size of the button
-        radioButton.setScaleX((float)1.5);
-        radioButton.setScaleY((float)1.5);
-        // set the height and width for the info button
-        infoButton.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT));
-        // get the color black
-        int colorPrimaryDark = Color.parseColor("#000000");
-        // set the background tint
-        infoButton.setBackgroundTintList(ColorStateList.valueOf(colorPrimaryDark));
-        infoButton.setRippleColor(colorPrimaryDark);
-        // set the button as clickable
-        infoButton.setClickable(true);
-        // set the size to 30dp
-        infoButton.setCustomSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30,
-                getResources().getDisplayMetrics()));
-        // set the image source
-        infoButton.setImageResource(R.drawable.baseline_info_24);
-        // make the icon scale to the size of the button
-        infoButton.setScaleType(ImageView.ScaleType.CENTER);
-        // set the tag to the index into the reminders arraylist
-        infoButton.setTag(Integer.toString(index));
-        // set the function to call when clicked
-        infoButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                setDetails(v);
-            }
-        });
-        // set the color of the divider
-        divider.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorGray));
-        // set the height and width of the divider
-        divider.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2,
-                getResources().getDisplayMetrics())));
+        // set the View's attributes
+        setDividerViewValues(divider);
         // add the view to the activity main layout
         // the numViewElems is the index at which to add the view
         parentLayout.addView(radioButton, numViewElems);
@@ -600,11 +436,80 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-        This method will set set up a EditText view.
+        This method will set set up a View's attributes.
+        The divider argument is the view to be changed.
+    */
+    public void setDividerViewValues(View divider)
+    {
+        // get a Id for the new divider
+        divider.setId(View.generateViewId());
+        // set the color of the divider
+        divider.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorGray));
+        // set the height and width of the divider
+        divider.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2,
+                getResources().getDisplayMetrics())));
+    }
+
+    /*
+        This method will set set up a FloatingActionButton view's attributes.
+        The infoButton argument is the view to be changed.
+        The index is the index into the arrayList for the reminders.
+    */
+    public void setInfoButtonValues(FloatingActionButton infoButton, int index)
+    {
+        // get a Id for the new info button
+        infoButton.setId(View.generateViewId());
+        // set the height and width for the info button
+        infoButton.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT));
+        // get the color black
+        int colorPrimaryDark = Color.parseColor("#000000");
+        // set the background tint
+        infoButton.setBackgroundTintList(ColorStateList.valueOf(colorPrimaryDark));
+        infoButton.setRippleColor(colorPrimaryDark);
+        // set the button as clickable
+        infoButton.setClickable(true);
+        // set the size to 30dp
+        infoButton.setCustomSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30,
+                getResources().getDisplayMetrics()));
+        // set the image source
+        infoButton.setImageResource(R.drawable.baseline_info_24);
+        // make the icon scale to the size of the button
+        infoButton.setScaleType(ImageView.ScaleType.CENTER);
+        // set the tag to the index into the reminders arraylist
+        infoButton.setTag(Integer.toString(index));
+        // set the function to call when clicked
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                setDetails(v);
+            }
+        });
+    }
+
+    /*
+        This method will set set up a RadioButton view's attributes.
+        The radioButton argument is the view to be changed.
+    */
+    public void setRadioButtonValues(RadioButton radioButton)
+    {
+        // get a Id for the new radio view
+        radioButton.setId(View.generateViewId());
+        // set the radio buttons width and height
+        radioButton.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        // get the value of the color accent
+        int colorAccent = Color.parseColor("#0078FF");
+        //set the color of the button
+        radioButton.setButtonTintList(ColorStateList.valueOf(colorAccent));
+        // set the size of the button
+        radioButton.setScaleX((float)1.5);
+        radioButton.setScaleY((float)1.5);
+    }
+
+    /*
+        This method will set set up a EditText view's attributes.
         The textView argument is the view to be changed.
         The index is the index into the arrayList for the reminders.
-        The text is the value to set the views text to
-     */
+    */
     public void setEditTextValues(EditText textView, int index)
     {
         // get a Id for the new text view
@@ -631,5 +536,8 @@ public class MainActivity extends AppCompatActivity {
                 reminders.get(this.getIndex()).setReminder(s.toString());
             }
         });
+        // set the id for the text element in the reminder array
+        // this is done to make it easier to update the textView on changes
+        reminders.get(index).setTextId(textView.getId());
     }
 }
