@@ -33,7 +33,11 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent intentWithResult = new Intent();
-        intentWithResult.putExtra("message_return", "This data is returned when user click button in target activity.");
+        String reminderText = "";
+        EditText tempText = (EditText)findViewById(R.id.editText3);
+        reminderText = tempText.getText().toString();
+        intentWithResult.putExtra("reminder_text", reminderText );
+        intentWithResult.putExtra("index", getIntent().getIntExtra("index", -1));
         setResult(1, intentWithResult);
         finish();
     }

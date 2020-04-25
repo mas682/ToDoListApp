@@ -11,6 +11,7 @@ public class Reminder {
     private String time;
     private String repeat;
     private String priority;
+    private int textId;
 
 
     public Reminder(String text)
@@ -29,6 +30,7 @@ public class Reminder {
 
     public String getReminder()
     {
+
         return reminder;
     }
 
@@ -39,6 +41,19 @@ public class Reminder {
 
     public String toString()
     {
+
         return "reminder:" + reminder + ";notes:" + notes + ";\n";
     }
+
+    public int getTextId()
+    {
+        return textId;
+    }
+
+    public void setTextId(int id)
+    {
+        textId = id;
+    }
+
+
 }
