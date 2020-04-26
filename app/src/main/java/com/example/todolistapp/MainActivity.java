@@ -22,6 +22,8 @@ import android.widget.RadioButton;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.w3c.dom.Text;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,12 +41,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         /* TODO
-            left off making it so that you could pass the text of a reminder to the details page
-            by getting it out of the arraylist
             things to fix/handle:
-            2. may want to use other threads for some of this stuff?
-            3. start messing with date/time notifications
-            4. then deal with location
+            1. may want to use other threads for some of this stuff?
+            2. start messing with date/time notifications
+            3. then deal with location
          */
         setContentView(R.layout.activity_main);
         // this currently only works when changing the rotation of the screen
@@ -301,38 +301,7 @@ public class MainActivity extends AppCompatActivity {
         setDividerViewValues(divider);
         // add the view to the activity main layout
         // the numViewElems is the index at which to add the view
-        parentLayout.addView(radioButton, numViewElems);
-        parentLayout.addView(textView, numViewElems + 1);
-        parentLayout.addView(infoButton, numViewElems + 2);
-        parentLayout.addView(divider, numViewElems + 3);
-        // set the constraints on where the new view should go inside the activity main layout
-        ConstraintSet set = new ConstraintSet();
-        set.clone(parentLayout);
-        // text view constraints
-        set.connect(textView.getId(), ConstraintSet.START, radioButton.getId(), ConstraintSet.END, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8,
-                getResources().getDisplayMetrics()));
-        set.connect(textView.getId(), ConstraintSet.END, infoButton.getId(), ConstraintSet.START, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
-                getResources().getDisplayMetrics()));
-        set.connect(textView.getId(), ConstraintSet.TOP, lastDiv.getId(), ConstraintSet.BOTTOM, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
-                getResources().getDisplayMetrics()));
-        // radio button constraints
-        set.connect(radioButton.getId(), ConstraintSet.START, parentLayout.getId(), ConstraintSet.START, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
-                getResources().getDisplayMetrics()));
-        set.connect(radioButton.getId(), ConstraintSet.TOP, lastDiv.getId(), ConstraintSet.BOTTOM, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
-                getResources().getDisplayMetrics()));
-        // info button constraints
-        set.connect(infoButton.getId(), ConstraintSet.TOP, lastDiv.getId(), ConstraintSet.BOTTOM, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14,
-                getResources().getDisplayMetrics()));
-        set.connect(infoButton.getId(), ConstraintSet.END, parentLayout.getId(), ConstraintSet.END, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
-                getResources().getDisplayMetrics()));
-        // divider constraints
-        set.connect(divider.getId(), ConstraintSet.TOP, textView.getId(), ConstraintSet.BOTTOM, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8,
-                getResources().getDisplayMetrics()));
-        set.connect(divider.getId(), ConstraintSet.START, radioButton.getId(), ConstraintSet.END, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8,
-                getResources().getDisplayMetrics()));
-        set.connect(divider.getId(), ConstraintSet.END, parentLayout.getId(), ConstraintSet.END, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
-                getResources().getDisplayMetrics()));
-        set.applyTo(parentLayout);
+        setConstraintsNewReminder(parentLayout, radioButton, textView, divider, infoButton, lastDiv.getId());
     }
 
     /*
@@ -380,6 +349,18 @@ public class MainActivity extends AppCompatActivity {
         View divider = new View(MainActivity.this);
         // set the View's attributes
         setDividerViewValues(divider);
+        // add the view to the activity main layout
+        // the numViewElems is the index at which to add the view
+        setConstraintsNewReminder(parentLayout, radioButton, textView, divider, infoButton, lastViewId);
+    }
+
+    /*
+        This method sets the constraints for a new reminder being added to the main constraint layout.
+     */
+    public void setConstraintsNewReminder(ConstraintLayout parentLayout, RadioButton radioButton, EditText textView, View divider, FloatingActionButton infoButton, int lastViewId)
+    {
+        // get the number of views in the layout already
+        int numViewElems = parentLayout.getChildCount();
         // add the view to the activity main layout
         // the numViewElems is the index at which to add the view
         parentLayout.addView(radioButton, numViewElems);
