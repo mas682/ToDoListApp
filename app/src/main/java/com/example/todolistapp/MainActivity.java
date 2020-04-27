@@ -1,5 +1,6 @@
 package com.example.todolistapp;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -9,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -18,11 +20,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.RadioButton;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -33,7 +34,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
     static final int RESULT_CODE = 0;
     private ArrayList<Reminder> reminders;
 
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             1. may want to use other threads for some of this stuff?
             2. start messing with date/time notifications
             3. then deal with location
+            4. need to deal with removing a notification
          */
         setContentView(R.layout.activity_main);
         // this currently only works when changing the rotation of the screen
@@ -225,9 +226,6 @@ public class MainActivity extends AppCompatActivity {
         Log.i("on save!!!!", "saving");
         //state.putString("reminder1", text);
         saveReminders();
-    }
-
-    private void fail(String sdcard_not_available) {
     }
 
     public void setDetails(View view) {

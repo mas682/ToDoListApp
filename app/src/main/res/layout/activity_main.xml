@@ -23,6 +23,7 @@
         app:maxImageSize="24dp"
         app:rippleColor="@color/design_default_color_on_secondary"
         app:srcCompat="@drawable/baseline_add_circle_24" />
+    
 
     <TextView
         android:id="@+id/textView"
@@ -35,5 +36,7 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/floatingActionButton2" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

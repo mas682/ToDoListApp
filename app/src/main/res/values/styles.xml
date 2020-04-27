@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:datePickerStyle">@style/DatePickerStyle</item>
     </style>
 
     <style name="SwitchCompatStyle" >
@@ -13,4 +14,25 @@
         <item name="trackTint">@color/switch_color</item>
     </style>
 
+    <style name="DatePickerStyle">
+        <item name="android:textSize">25sp</item>
+        <item name="android:background">@color/colorDarkGray</item>
+        <item name="android:calendarTextColor">@color/colorWhite</item>
+        <item name="android:datePickerMode">spinner</item>
+        <item name="android:minDate">01/01/2000</item>
+        <item name="android:textColorPrimary">@color/colorWhite</item>
+    </style>
+
+    <style name="numberPicker">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColorPrimary">@color/colorWhite</item>
+        <!-- this controls the color of the divider-->
+        <item name="colorControlNormal">@color/colorPrimary</item>
+    </style>
+
+    <style name="emptyNumberPicker">
+        <item name="android:textColorPrimary">@color/colorDarkGray</item>
+        <item name="android:textSize">22sp</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+    </style>
 </resources>

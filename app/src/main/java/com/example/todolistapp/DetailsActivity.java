@@ -1,11 +1,17 @@
 package com.example.todolistapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.NumberPicker;
+import android.widget.Switch;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -25,10 +31,40 @@ public class DetailsActivity extends AppCompatActivity {
         text.setText(reminder);
         // for testing
         Log.i("inside details", "value " + reminder);
+        SwitchCompat dateSwitch = (SwitchCompat)findViewById(R.id.switch2);
+        dateSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setDate(v);
+            }
+        });
+        addNumberPicker();
 
     }
 
+    public void setDate(View view)
+    {
+        SwitchCompat temp = (SwitchCompat)view;
+        System.out.println("Switch checked: " + temp.isChecked());
 
+    }
+
+    public void addNumberPicker()
+    {
+        NumberPicker numPicker = (NumberPicker)findViewById(R.id.monthPicker);
+        numPicker.setMinValue(0);
+        numPicker.setMaxValue(6);
+        numPicker.setDisplayedValues( new String[] { "January", "February", "March", "April", "May", "June", "July" } );
+        numPicker.setValue(3);
+        NumberPicker dates = (NumberPicker)findViewById(R.id.datePicker);
+        dates.setMinValue(1);
+        dates.setMaxValue(31);
+        dates.setValue(15);
+        NumberPicker years = (NumberPicker)findViewById(R.id.yearPicker);
+        years.setMinValue(2000);
+        years.setMaxValue(3000);
+        years.setValue(2020);
+    }
 
     @Override
     public void onBackPressed() {
