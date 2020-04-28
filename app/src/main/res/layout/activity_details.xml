@@ -243,8 +243,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:background="@color/colorDarkGray"
-                    android:descendantFocusability="blocksDescendants"
                     android:clickable="false"
+                    android:descendantFocusability="blocksDescendants"
+                    android:onClick="setDays"
                     android:textAlignment="viewStart"
                     android:theme="@style/numberPicker"
                     app:layout_constraintEnd_toStartOf="@id/datePicker"
@@ -268,7 +269,7 @@
 
                 <NumberPicker
                     android:id="@+id/yearPicker"
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:background="@color/colorDarkGray"

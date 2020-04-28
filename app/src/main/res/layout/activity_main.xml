@@ -23,7 +23,7 @@
         app:maxImageSize="24dp"
         app:rippleColor="@color/design_default_color_on_secondary"
         app:srcCompat="@drawable/baseline_add_circle_24" />
-    
+
 
     <TextView
         android:id="@+id/textView"
