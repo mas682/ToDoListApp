@@ -197,19 +197,35 @@
                     app:layout_constraintTop_toBottomOf="@id/switch2" />
 
                 <TextView
-                    android:id="@+id/AlarmTextView"
+                    android:id="@+id/alarmTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:onClick="showDatePicker"
                     android:text="Alarm"
                     android:textAlignment="textStart"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="17sp"
+                    app:layout_constraintEnd_toStartOf="@id/alarmDateTextView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider7" />
+
+                <TextView
+                    android:id="@+id/alarmDateTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:onClick="showDatePicker"
+                    android:textAlignment="textEnd"
                     android:textColor="@color/colorGray"
                     android:textSize="17sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/alarmTextView"
                     app:layout_constraintTop_toBottomOf="@id/divider7" />
+
+
 
                 <View
                     android:id="@+id/divider9"
@@ -220,7 +236,7 @@
                     android:background="@color/colorPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/AlarmTextView" />
+                    app:layout_constraintTop_toBottomOf="@id/alarmTextView" />
 
                 <NumberPicker
                     android:id="@+id/paddingStartDatePicker"
@@ -228,10 +244,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:background="@color/colorDarkGray"
-                    android:descendantFocusability="blocksDescendants"
                     android:clickable="false"
+                    android:descendantFocusability="blocksDescendants"
                     android:focusable="false"
                     android:theme="@style/emptyNumberPicker"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toStartOf="@id/monthPicker"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -245,9 +262,9 @@
                     android:background="@color/colorDarkGray"
                     android:clickable="false"
                     android:descendantFocusability="blocksDescendants"
-                    android:onClick="setDays"
                     android:textAlignment="viewStart"
                     android:theme="@style/numberPicker"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toStartOf="@id/datePicker"
                     app:layout_constraintStart_toEndOf="@id/paddingStartDatePicker"
                     app:layout_constraintTop_toBottomOf="@id/divider9" />
@@ -260,9 +277,10 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="100dp"
                     android:background="@color/colorDarkGray"
-                    android:descendantFocusability="blocksDescendants"
                     android:clickable="false"
+                    android:descendantFocusability="blocksDescendants"
                     android:theme="@style/numberPicker"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider9" />
@@ -273,9 +291,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:background="@color/colorDarkGray"
-                    android:descendantFocusability="blocksDescendants"
                     android:clickable="false"
+                    android:descendantFocusability="blocksDescendants"
                     android:theme="@style/numberPicker"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toStartOf="@id/paddingEndDatePicker"
                     app:layout_constraintStart_toEndOf="@id/datePicker"
                     app:layout_constraintTop_toBottomOf="@id/divider9" />
@@ -283,12 +302,13 @@
                 <NumberPicker
                     android:id="@+id/paddingEndDatePicker"
                     android:layout_width="0dp"
-                    android:layout_marginTop="8dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:background="@color/colorDarkGray"
-                    android:descendantFocusability="blocksDescendants"
                     android:clickable="false"
+                    android:descendantFocusability="blocksDescendants"
                     android:theme="@style/emptyNumberPicker"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toEndOf="@id/yearPicker"
@@ -301,6 +321,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:background="@color/colorPrimary"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/monthPicker" />

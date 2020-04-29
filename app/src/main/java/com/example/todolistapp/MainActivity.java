@@ -237,6 +237,14 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("reminder", reminders.get(index).getReminder());
         // pass the index into the Reminders array as this is needed when returning
         intent.putExtra("index", index);
+        // pass the day
+        intent.putExtra("day", reminders.get(index).getDay());
+        // pass the month
+        intent.putExtra("month", reminders.get(index).getMonth());
+        // pass the year
+        intent.putExtra("year", reminders.get(index).getYear());
+        // pass a boolean saying whether set to date
+        intent.putExtra("remindOnDay", reminders.get(index).getRemindOnADay());
         // call the activity with the intent
         startActivityForResult(intent, RESULT_CODE);
     }
