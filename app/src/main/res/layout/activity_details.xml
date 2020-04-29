@@ -160,7 +160,7 @@
                 app:layout_constraintTop_toBottomOf="@id/reminderNotesBox">
 
                 <View
-                    android:id="@+id/divider5"
+                    android:id="@+id/reminderTopDivider"
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
                     android:background="@color/colorPrimary"
@@ -169,7 +169,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/switch2"
+                    android:id="@+id/daySwitch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -186,7 +186,7 @@
                     app:track="@drawable/switch_track" />
 
                 <View
-                    android:id="@+id/divider7"
+                    android:id="@+id/daySwitchTextDivider"
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
                     android:layout_marginStart="16dp"
@@ -194,7 +194,7 @@
                     android:background="@color/colorPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/switch2" />
+                    app:layout_constraintTop_toBottomOf="@id/daySwitch" />
 
                 <TextView
                     android:id="@+id/alarmTextView"
@@ -209,7 +209,7 @@
                     android:textSize="17sp"
                     app:layout_constraintEnd_toStartOf="@id/alarmDateTextView"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider7" />
+                    app:layout_constraintTop_toBottomOf="@id/daySwitchTextDivider" />
 
                 <TextView
                     android:id="@+id/alarmDateTextView"
@@ -223,12 +223,12 @@
                     android:textSize="17sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/alarmTextView"
-                    app:layout_constraintTop_toBottomOf="@id/divider7" />
+                    app:layout_constraintTop_toBottomOf="@id/daySwitchTextDivider" />
 
 
 
                 <View
-                    android:id="@+id/divider9"
+                    android:id="@+id/textNumPickerDivider"
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
                     android:layout_marginStart="16dp"
@@ -252,7 +252,7 @@
                     app:layout_constraintEnd_toStartOf="@id/monthPicker"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider9" />
+                    app:layout_constraintTop_toBottomOf="@id/textNumPickerDivider" />
 
                 <NumberPicker
                     android:id="@+id/monthPicker"
@@ -267,7 +267,7 @@
                     android:visibility="gone"
                     app:layout_constraintEnd_toStartOf="@id/datePicker"
                     app:layout_constraintStart_toEndOf="@id/paddingStartDatePicker"
-                    app:layout_constraintTop_toBottomOf="@id/divider9" />
+                    app:layout_constraintTop_toBottomOf="@id/textNumPickerDivider" />
 
                 <NumberPicker
                     android:id="@+id/datePicker"
@@ -283,7 +283,7 @@
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider9" />
+                    app:layout_constraintTop_toBottomOf="@id/textNumPickerDivider" />
 
                 <NumberPicker
                     android:id="@+id/yearPicker"
@@ -297,7 +297,7 @@
                     android:visibility="gone"
                     app:layout_constraintEnd_toStartOf="@id/paddingEndDatePicker"
                     app:layout_constraintStart_toEndOf="@id/datePicker"
-                    app:layout_constraintTop_toBottomOf="@id/divider9" />
+                    app:layout_constraintTop_toBottomOf="@id/textNumPickerDivider" />
 
                 <NumberPicker
                     android:id="@+id/paddingEndDatePicker"
@@ -312,10 +312,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toEndOf="@id/yearPicker"
-                    app:layout_constraintTop_toBottomOf="@id/divider9" />
+                    app:layout_constraintTop_toBottomOf="@id/textNumPickerDivider" />
 
                 <View
-                    android:id="@+id/divider8"
+                    android:id="@+id/pickerTimeSwitchDivider"
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
                     android:layout_marginStart="16dp"
@@ -340,18 +340,19 @@
                     android:thumb="@drawable/switch_circle_button"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/divider8"
+                    app:layout_constraintTop_toTopOf="@id/pickerTimeSwitchDivider"
                     app:track="@drawable/switch_track" />
 
 
                 <View
-                    android:id="@+id/divider6"
+                    android:id="@+id/reminderBottomDivider"
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
                     android:layout_marginTop="8dp"
                     android:background="@color/colorPrimary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/timeSwitch"
                     app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 

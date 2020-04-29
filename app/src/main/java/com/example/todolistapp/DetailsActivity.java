@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,6 +50,7 @@ public class DetailsActivity extends AppCompatActivity {
         else
         {
             reminder = new Reminder(reminderText);
+            setDate(findViewById(R.id.daySwitch));
         }
         // eventually:
         // if remidnOnDay
@@ -64,22 +64,19 @@ public class DetailsActivity extends AppCompatActivity {
         text.setText(reminderText);
         // for testing
         Log.i("inside details", "value " + reminderText);
-        SwitchCompat dateSwitch = (SwitchCompat)findViewById(R.id.switch2);
+        SwitchCompat dateSwitch = (SwitchCompat)findViewById(R.id.daySwitch);
         dateSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setDate(v);
             }
         });
-        addNumberPicker(day, month, year);
+        //addNumberPicker(day, month, year);
 
     }
 
-    // left off here...this will be called when the text views are clicked
-    // need to see what the current state is
-    // if pickers visible, then set to not visible
-    // if not visible set to visible
-    // also change values in text views
+    // this method is called when the field holding the Alarm text is touched
+    // this is also called when the picker is visible and the user wants to close it
     public void showDatePicker(View view)
     {
         NumberPicker paddingStartPicker = (NumberPicker)findViewById(R.id.paddingStartDatePicker);
@@ -88,7 +85,7 @@ public class DetailsActivity extends AppCompatActivity {
         NumberPicker yearPicker = (NumberPicker)findViewById(R.id.yearPicker);
         NumberPicker paddingEndPicker = (NumberPicker)findViewById(R.id.paddingEndDatePicker);
         // you need to change the name of this in the xml file
-        View divider = findViewById(R.id.divider8);
+        View divider = findViewById(R.id.pickerTimeSwitchDivider);
         TextView alarmText = (TextView)findViewById(R.id.alarmTextView);
         TextView alarmDateText = (TextView)findViewById(R.id.alarmDateTextView);
         //monthPicker.setVisibility();
@@ -117,6 +114,7 @@ public class DetailsActivity extends AppCompatActivity {
         }
         else
         {
+            addNumberPicker(reminder.getDay(), reminder.getMonth(), reminder.getYear());
             paddingStartPicker.setVisibility(View.VISIBLE);
             monthPicker.setVisibility(View.VISIBLE);
             datePicker.setVisibility(View.VISIBLE);
@@ -140,10 +138,37 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
+    // this needs to display the fields under the remind me on a day switch
+    // this will also need to close the date picker/time picker if open when this is switched off
     public void setDate(View view)
     {
-        SwitchCompat temp = (SwitchCompat)view;
-        System.out.println("Switch checked: " + temp.isChecked());
+        SwitchCompat remindSwitch = (SwitchCompat)view;
+        TextView alarmText = (TextView)findViewById(R.id.alarmTextView);
+        TextView alarmDateText = (TextView)findViewById(R.id.alarmDateTextView);
+        View daySwitchTextDivider = findViewById(R.id.daySwitchTextDivider);
+        View textNumPickerDivider = findViewById(R.id.textNumPickerDivider);
+        SwitchCompat timeSwitch = (SwitchCompat)findViewById(R.id.timeSwitch);
+        if(remindSwitch.isChecked())
+        {
+            alarmText.setVisibility(View.VISIBLE);
+            alarmDateText.setVisibility(View.VISIBLE);
+            daySwitchTextDivider.setVisibility(View.VISIBLE);
+            textNumPickerDivider.setVisibility(View.VISIBLE);
+            timeSwitch.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            NumberPicker monthPicker = (NumberPicker)findViewById(R.id.monthPicker);
+            if(monthPicker.getVisibility() == View.VISIBLE)
+            {
+                showDatePicker(null);
+            }
+            alarmText.setVisibility(View.GONE);
+            alarmDateText.setVisibility(View.GONE);
+            daySwitchTextDivider.setVisibility(View.GONE);
+            textNumPickerDivider.setVisibility(View.GONE);
+            timeSwitch.setVisibility(View.GONE);
+        }
 
     }
 
