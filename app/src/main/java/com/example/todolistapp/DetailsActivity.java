@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DetailsActivity extends AppCompatActivity {
@@ -35,44 +35,47 @@ public class DetailsActivity extends AppCompatActivity {
         // get the reminder text that was passed over
         String reminderText = intent.getStringExtra("reminder");
         // get the day
-        int day = intent.getIntExtra("day", 1);
+        int day = intent.getIntExtra("day", -1);
         // get the month
-        int month = intent.getIntExtra("month", 0);
+        int month = intent.getIntExtra("month", -1);
         // get the year
-        int year = intent.getIntExtra("year", 2020);
+        int year = intent.getIntExtra("year", -1);
+        // if day is -1, no date has been set for this reminder yet, so use the current date
+        if(day == -1)
+        {
+            Calendar calendar = Calendar.getInstance();
+            day = calendar.get(Calendar.DATE);
+            month = calendar.get(Calendar.MONTH);
+            year = calendar.get(Calendar.YEAR);
+        }
         // get whether or not date set
         boolean remindOnDay = intent.getBooleanExtra("remindOnDay", false);
-        // if a date was chosen, use this constructor
-        if(remindOnDay) {
-            reminder = new Reminder(reminderText, day, month, year, remindOnDay);
-        }
-        // if no date set, initialize to today
-        else
+        // create the reminder object
+        reminder = new Reminder(reminderText, day, month, year, remindOnDay);
+        // get the remindOnDay switch
+        SwitchCompat daySwitch = (SwitchCompat)findViewById(R.id.daySwitch);
+        // if remind on a day boolean true, set the switch as checked
+        if(remindOnDay)
         {
-            reminder = new Reminder(reminderText);
-            setDate(findViewById(R.id.daySwitch));
+            daySwitch.setChecked(true);
         }
-        // eventually:
-        // if remidnOnDay
-        // do this
-            String dateString = formatDateAlarm(month, day, year);
-            TextView dateText = (TextView)findViewById(R.id.alarmDateTextView);
-            dateText.setText(dateString);
+        // call this outside the if so that if the switch is not checked, the views that
+        // should not be visible are not visible
+        setDate(daySwitch);
         // get the view for the reminder
         EditText text = (EditText)findViewById(R.id.editText3);
         // set the text
         text.setText(reminderText);
-        // for testing
-        Log.i("inside details", "value " + reminderText);
-        SwitchCompat dateSwitch = (SwitchCompat)findViewById(R.id.daySwitch);
-        dateSwitch.setOnClickListener(new View.OnClickListener() {
+        // initialize the values in the number picker so this is not called every time
+        // a user changes their mind to switch the date
+        initializeNumberPicker();
+        // add a listener to the remindOnDay switch
+        daySwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setDate(v);
             }
         });
-        //addNumberPicker(day, month, year);
-
     }
 
     // this method is called when the field holding the Alarm text is touched
@@ -84,11 +87,9 @@ public class DetailsActivity extends AppCompatActivity {
         NumberPicker datePicker = (NumberPicker)findViewById(R.id.datePicker);
         NumberPicker yearPicker = (NumberPicker)findViewById(R.id.yearPicker);
         NumberPicker paddingEndPicker = (NumberPicker)findViewById(R.id.paddingEndDatePicker);
-        // you need to change the name of this in the xml file
         View divider = findViewById(R.id.pickerTimeSwitchDivider);
         TextView alarmText = (TextView)findViewById(R.id.alarmTextView);
         TextView alarmDateText = (TextView)findViewById(R.id.alarmDateTextView);
-        //monthPicker.setVisibility();
         monthPicker.getVisibility();
         int visible = monthPicker.getVisibility();
         // if visible
@@ -114,29 +115,29 @@ public class DetailsActivity extends AppCompatActivity {
         }
         else
         {
-            addNumberPicker(reminder.getDay(), reminder.getMonth(), reminder.getYear());
+            // set the values for the date picker
+            addDatePicker(reminder.getDay(), reminder.getMonth(), reminder.getYear());
             paddingStartPicker.setVisibility(View.VISIBLE);
             monthPicker.setVisibility(View.VISIBLE);
             datePicker.setVisibility(View.VISIBLE);
             yearPicker.setVisibility(View.VISIBLE);
             paddingEndPicker.setVisibility(View.VISIBLE);
             alarmDateText.setText("");
+            // change the width to 1 so the full date can be visible
             ViewGroup.LayoutParams layoutParams = alarmDateText.getLayoutParams();
             layoutParams.width = 1;
             alarmDateText.setLayoutParams(layoutParams);
-            //alarmDateText.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, ConstraintLayout.LayoutParams.WRAP_CONTENT));
             String date = formatDate(reminder.getMonth(), reminder.getDay(), reminder.getYear());
             alarmText.setText(date);
-            ViewGroup.LayoutParams layoutParams2 = alarmText.getLayoutParams();
-            layoutParams2.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT;
-           // alarmText.setLayoutParams(layoutParams2);
-            //alarmText.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, ConstraintLayout.LayoutParams.WRAP_CONTENT));
             // get the color colorAccent
             int colorAccent = Color.parseColor("#0078FF");
             alarmText.setTextColor(ColorStateList.valueOf(colorAccent));
             divider.setVisibility(View.VISIBLE);
         }
     }
+
+    // then deal with actual notifications or do the time part or time
+    // the time part should be pretty similar to day part
 
     // this needs to display the fields under the remind me on a day switch
     // this will also need to close the date picker/time picker if open when this is switched off
@@ -155,6 +156,11 @@ public class DetailsActivity extends AppCompatActivity {
             daySwitchTextDivider.setVisibility(View.VISIBLE);
             textNumPickerDivider.setVisibility(View.VISIBLE);
             timeSwitch.setVisibility(View.VISIBLE);
+            // if this is checked, remindOnDay should be true
+            reminder.setRemindOnADay(true);
+            // update the date string being displayed to the current date
+            String dateString = formatDateAlarm(reminder.getMonth(), reminder.getDay(), reminder.getYear());
+            alarmDateText.setText(dateString);
         }
         else
         {
@@ -168,6 +174,7 @@ public class DetailsActivity extends AppCompatActivity {
             daySwitchTextDivider.setVisibility(View.GONE);
             textNumPickerDivider.setVisibility(View.GONE);
             timeSwitch.setVisibility(View.GONE);
+            reminder.setRemindOnADay(false);
         }
 
     }
@@ -237,6 +244,7 @@ public class DetailsActivity extends AppCompatActivity {
         // format the date as the year was changed
         // format the date as the year was changed
         reminder.setYear(newVal);
+        reminder.setDay(datePicker.getValue());
         TextView alarmText = (TextView)findViewById(R.id.alarmTextView);
         alarmText.setText(formatDate(monthPicker.getValue(), datePicker.getValue(), newVal));
     }
@@ -282,11 +290,13 @@ public class DetailsActivity extends AppCompatActivity {
             if(date > 30)
             {
                 datePicker.setValue(30);
+                System.out.println("Changing date to 30 from: " + date);
             }
         }
         // update the string displaying the date as the month was changed
         // format the date as the year was changed
         reminder.setMonth(newVal);
+        reminder.setDay(datePicker.getValue());
         TextView alarmText = (TextView)findViewById(R.id.alarmTextView);
         alarmText.setText(formatDate(newVal, datePicker.getValue(), yearPicker.getValue()));
     }
@@ -305,8 +315,6 @@ public class DetailsActivity extends AppCompatActivity {
             sdf.applyPattern("EEE, MM/d/yy");
             // get the date string
             stringDate = sdf.format(myDate);
-            // for testing
-            System.out.println(stringDate);
         } catch (ParseException e) {
 
         }
@@ -328,28 +336,32 @@ public class DetailsActivity extends AppCompatActivity {
             sdf.applyPattern("EEEE, MMMM d, yyyy");
             // get the date string
             stringDate = sdf.format(myDate);
-            // for testing
-            System.out.println(stringDate);
         } catch(ParseException e)
         {
 
         }
         return stringDate;
-        // here, would need to update the view to display the appropriate date
-        // want to always keep date once set
-        // originally want this set to the current date
-        // but once set once, even if date not marked, set to the value
-        // need to deal with storing somehow, can probably convert using the sdf like above
-        // depending on boolean value, choose which view to show
     }
 
-    public void addNumberPicker(int day, int month, int year)
+    // used to set the values of the date picker
+    public void addDatePicker(int day, int month, int year)
+    {
+        NumberPicker monthPicker = (NumberPicker)findViewById(R.id.monthPicker);
+        monthPicker.setValue(month);
+
+        NumberPicker dates = (NumberPicker)findViewById(R.id.datePicker);
+        dates.setValue(day);
+
+        NumberPicker years = (NumberPicker)findViewById(R.id.yearPicker);
+        years.setValue(year);
+    }
+
+    public void initializeNumberPicker()
     {
         NumberPicker monthPicker = (NumberPicker)findViewById(R.id.monthPicker);
         monthPicker.setMinValue(0);
         monthPicker.setMaxValue(11);
         monthPicker.setDisplayedValues( new String[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" } );
-        monthPicker.setValue(month);
         monthPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -359,7 +371,6 @@ public class DetailsActivity extends AppCompatActivity {
         NumberPicker dates = (NumberPicker)findViewById(R.id.datePicker);
         dates.setMinValue(1);
         dates.setMaxValue(30);
-        dates.setValue(day);
         dates.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -369,7 +380,6 @@ public class DetailsActivity extends AppCompatActivity {
         NumberPicker years = (NumberPicker)findViewById(R.id.yearPicker);
         years.setMinValue(2000);
         years.setMaxValue(3000);
-        years.setValue(year);
         years.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -386,6 +396,16 @@ public class DetailsActivity extends AppCompatActivity {
         reminderText = tempText.getText().toString();
         intentWithResult.putExtra("reminder_text", reminderText );
         intentWithResult.putExtra("index", getIntent().getIntExtra("index", -1));
+        intentWithResult.putExtra("remindOnDay", reminder.getRemindOnADay());
+        if(!reminder.getRemindOnADay())
+        {
+            reminder.setMonth(-1);
+            reminder.setDay(-1);
+            reminder.setYear(-1);
+        }
+        intentWithResult.putExtra("month", reminder.getMonth());
+        intentWithResult.putExtra("day", reminder.getDay());
+        intentWithResult.putExtra("year", reminder.getYear());
         setResult(1, intentWithResult);
         finish();
     }

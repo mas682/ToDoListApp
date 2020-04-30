@@ -44,7 +44,7 @@ public class Reminder {
         notes = "";
         remindAtLocation = false;
         location = "";
-        remindOnDay = false;
+        this.remindOnDay = remindOnDay;
         // initialize to the current date
         this.day = day;
         this.month = month;
@@ -69,7 +69,8 @@ public class Reminder {
     public String toString()
     {
         // this needs updates, and then will have to update the main page as well
-        return "reminder:" + reminder + ";notes:" + notes + ";\n";
+        //return "reminder:" + reminder + ";notes:" + notes + ";\n";
+        return "reminder:" + reminder + ";notes:" + notes + ";remindOnDay:" + remindOnDay + ";month:" + month + ";day:" + day + ";year:" + year + ";\n";
     }
 
     public int getTextId()
@@ -116,7 +117,7 @@ public class Reminder {
         return remindOnDay;
     }
 
-    public void setRemondOnADay(boolean remindOnDay)
+    public void setRemindOnADay(boolean remindOnDay)
     {
         this.remindOnDay = remindOnDay;
     }

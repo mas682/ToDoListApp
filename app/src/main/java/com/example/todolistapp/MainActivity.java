@@ -113,6 +113,11 @@ public class MainActivity extends AppCompatActivity {
         String reminder = "";
         // string to temporarily hold the notes
         String notes = "";
+        // boolean to hold if to save date or not
+        boolean remindOnDay = false;
+        int month = -1;
+        int day = -1;
+        int year = -1;
         // array to temporarily hold a value associated with corresponding values
         String values[];
         for(int i = 0; i < tokens.length; i++)
@@ -139,9 +144,29 @@ public class MainActivity extends AppCompatActivity {
                     notes = "";
                 }
             }
+            // remindOnDay
+            else if(i == 2)
+            {
+                remindOnDay = Boolean.parseBoolean(values[1]);
+            }
+            // month
+            else if(i == 3)
+            {
+                 month = Integer.parseInt(values[1]);
+            }
+            // day
+            else if(i == 4)
+            {
+                day = Integer.parseInt(values[1]);
+            }
+            // year
+            else if(i == 5)
+            {
+                year = Integer.parseInt(values[1]);
+            }
         }
         // create a new reminder
-        Reminder tempReminder = new Reminder(reminder);
+        Reminder tempReminder = new Reminder(reminder, day, month, year, remindOnDay);
         // eventually want to set notes here
 
         if(reminders == null)
@@ -233,18 +258,19 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DetailsActivity.class);
         // get the index into the Reminders ArrayList
         int index = Integer.parseInt((String)view.getTag());
+        Reminder tempReminder = reminders.get(index);
         // pass the reminder text
-        intent.putExtra("reminder", reminders.get(index).getReminder());
+        intent.putExtra("reminder", tempReminder.getReminder());
         // pass the index into the Reminders array as this is needed when returning
         intent.putExtra("index", index);
         // pass the day
-        intent.putExtra("day", reminders.get(index).getDay());
+        intent.putExtra("day", tempReminder.getDay());
         // pass the month
-        intent.putExtra("month", reminders.get(index).getMonth());
+        intent.putExtra("month", tempReminder.getMonth());
         // pass the year
-        intent.putExtra("year", reminders.get(index).getYear());
+        intent.putExtra("year", tempReminder.getYear());
         // pass a boolean saying whether set to date
-        intent.putExtra("remindOnDay", reminders.get(index).getRemindOnADay());
+        intent.putExtra("remindOnDay", tempReminder.getRemindOnADay());
         // call the activity with the intent
         startActivityForResult(intent, RESULT_CODE);
     }
@@ -264,10 +290,23 @@ public class MainActivity extends AppCompatActivity {
         String messageReturned = data.getStringExtra("reminder_text");
         // get the index into the Reminders array
         int index = data.getIntExtra("index", -1);
+        // remindOnDay returned
+        boolean remindOnDayUpdate = data.getBooleanExtra("remindOnDay", false);
+        // get returned month
+        int updatedMonth = data.getIntExtra("month", -1);
+        // get returned day
+        int updatedDay = data.getIntExtra("day", -1);
+        // get year returned
+        int updatedYear = data.getIntExtra("year", -1);
         if(index != -1)
         {
+            Reminder tempReminder = reminders.get(index);
             // update the reminder in the array
-            reminders.get(index).setReminder(messageReturned);
+            tempReminder.setReminder(messageReturned);
+            tempReminder.setRemindOnADay(remindOnDayUpdate);
+            tempReminder.setDay(updatedDay);
+            tempReminder.setMonth(updatedMonth);
+            tempReminder.setYear(updatedYear);
             // get the view id from the reminder
             EditText tempView = (EditText)findViewById(reminders.get(index).getTextId());
             // update the view
