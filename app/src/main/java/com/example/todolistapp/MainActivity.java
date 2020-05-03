@@ -1,6 +1,5 @@
 package com.example.todolistapp;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -10,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -20,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
 import android.widget.RadioButton;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -45,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             1. may want to use other threads for some of this stuff?
             2. start messing with date/time notifications
             3. then deal with location
-            4. need to deal with removing a notification
+            4. need to deal with removing a reminder
          */
         setContentView(R.layout.activity_main);
         // this currently only works when changing the rotation of the screen

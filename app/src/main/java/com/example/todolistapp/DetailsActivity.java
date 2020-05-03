@@ -54,6 +54,7 @@ public class DetailsActivity extends AppCompatActivity {
         reminder = new Reminder(reminderText, day, month, year, remindOnDay);
         // get the remindOnDay switch
         SwitchCompat daySwitch = (SwitchCompat)findViewById(R.id.daySwitch);
+        SwitchCompat timeSwitch = (SwitchCompat)findViewById(R.id.timeSwitch);
         // if remind on a day boolean true, set the switch as checked
         if(remindOnDay)
         {
@@ -69,11 +70,26 @@ public class DetailsActivity extends AppCompatActivity {
         // initialize the values in the number picker so this is not called every time
         // a user changes their mind to switch the date
         initializeNumberPicker();
+        initializeTimePicker();
         // add a listener to the remindOnDay switch
         daySwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setDate(v);
+            }
+        });
+        // add a listener to the remind at a time switch
+        timeSwitch.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)  {
+                setTime(v);
+            }
+        });
+        // add a listenter to the remindAtTime switxh
+        timeSwitch.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                setTime(v);
             }
         });
     }
@@ -90,7 +106,6 @@ public class DetailsActivity extends AppCompatActivity {
         View divider = findViewById(R.id.pickerTimeSwitchDivider);
         TextView alarmText = (TextView)findViewById(R.id.alarmTextView);
         TextView alarmDateText = (TextView)findViewById(R.id.alarmDateTextView);
-        monthPicker.getVisibility();
         int visible = monthPicker.getVisibility();
         // if visible
         if(visible == 0)
@@ -136,8 +151,111 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
+    // this method is called when the field holding the Time text is touched
+    // this is also called when the picker is visible and the user wants to close it
+    public void showTimePicker(View view)
+    {
+        NumberPicker paddingStartPicker = (NumberPicker)findViewById(R.id.paddingStartTimePicker);
+        NumberPicker hourPicker = (NumberPicker)findViewById(R.id.hourPicker);
+        NumberPicker minutePicker = (NumberPicker)findViewById(R.id.minutePicker);
+        NumberPicker amPmPicker = (NumberPicker)findViewById(R.id.amPmPicker);
+        NumberPicker paddingEndPicker = (NumberPicker)findViewById(R.id.paddingEndTimePicker);
+        View divider = findViewById(R.id.timeSwitchTextDivider);
+        TextView timeText = (TextView)findViewById(R.id.timeTextView);
+        TextView timeSetText = (TextView)findViewById(R.id.timeSetTextView);
+        int visible = hourPicker.getVisibility();
+        // if visible
+        if(visible == 0)
+        {
+            paddingStartPicker.setVisibility(View.GONE);
+            hourPicker.setVisibility(View.GONE);
+            minutePicker.setVisibility(View.GONE);
+            amPmPicker.setVisibility(View.GONE);
+            paddingEndPicker.setVisibility(View.GONE);
+            divider.setVisibility(View.GONE);
+            // set this to a empty string
+            String time = "Test example";
+                    //formatDateAlarm(reminder.getMonth(), reminder.getDay(), reminder.getYear());
+            ViewGroup.LayoutParams layoutParams = timeSetText.getLayoutParams();
+            layoutParams.width = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT;
+            timeSetText.setLayoutParams(layoutParams);
+            timeSetText.setText(time);
+            // this will need changed
+            timeText.setText("Time");
+            // get the color black
+            int colorWhite = Color.parseColor("#FFFFFF");
+            timeText.setTextColor(ColorStateList.valueOf(colorWhite));
+        }
+        else
+        {
+            // set the values for the date picker
+            //addDatePicker(reminder.getDay(), reminder.getMonth(), reminder.getYear());
+            paddingStartPicker.setVisibility(View.VISIBLE);
+            hourPicker.setVisibility(View.VISIBLE);
+            minutePicker.setVisibility(View.VISIBLE);
+            amPmPicker.setVisibility(View.VISIBLE);
+            paddingEndPicker.setVisibility(View.VISIBLE);
+            divider.setVisibility(View.VISIBLE);
+            timeSetText.setText("");
+            // change the width to 1 so the full date can be visible
+            ViewGroup.LayoutParams layoutParams = timeSetText.getLayoutParams();
+            layoutParams.width = 1;
+            timeSetText.setLayoutParams(layoutParams);
+            String time = "test";
+                    //formatDate(reminder.getMonth(), reminder.getDay(), reminder.getYear());
+            timeText.setText(time);
+            // get the color colorAccent
+            int colorAccent = Color.parseColor("#0078FF");
+            timeText.setTextColor(ColorStateList.valueOf(colorAccent));
+        }
+    }
+
+
     // then deal with actual notifications or do the time part or time
     // the time part should be pretty similar to day part
+    public void setTime(View view)
+    {
+        SwitchCompat timeSwitch = (SwitchCompat)view;
+        TextView timeText = (TextView)findViewById(R.id.timeTextView);
+        TextView timeSetText = (TextView)findViewById(R.id.timeSetTextView);
+        View timeSwitchTextDivider = findViewById(R.id.timeSwitchTextDivider);
+        View timeTextPickerDivider = findViewById(R.id.timeTextPickerDivider);
+
+        if(timeSwitch.isChecked())
+        {
+            timeText.setVisibility(View.VISIBLE);
+            timeSetText.setVisibility(View.VISIBLE);
+            timeSwitchTextDivider.setVisibility(View.VISIBLE);
+            timeTextPickerDivider.setVisibility(View.VISIBLE);
+            // if this is checked, remindOnDay should be true
+            // this will be:
+            // reminder.setTimeReminder(true);
+            // update the time string being displayed
+            String timeString = "test";
+            timeSetText.setText(timeString);
+        }
+        else
+        {
+            NumberPicker hourPicker = (NumberPicker)findViewById(R.id.hourPicker);
+            if(hourPicker.getVisibility() == View.VISIBLE)
+            {
+                showTimePicker(null);
+            }
+            timeText.setVisibility(View.GONE);
+            timeSetText.setVisibility(View.GONE);
+            timeSwitchTextDivider.setVisibility(View.GONE);
+            timeTextPickerDivider.setVisibility(View.GONE);
+            // eventually
+            //reminder.setTimeReminder(false);
+        }
+    }
+
+    // this method is called when the date is changed
+    // this simply updates the formatted date
+    public void timeDateChanged(NumberPicker picker, int oldVal, int newVal)
+    {
+        picker.setMaxValue(picker.getMaxValue() + 1);
+    }
 
     // this needs to display the fields under the remind me on a day switch
     // this will also need to close the date picker/time picker if open when this is switched off
@@ -176,7 +294,6 @@ public class DetailsActivity extends AppCompatActivity {
             timeSwitch.setVisibility(View.GONE);
             reminder.setRemindOnADay(false);
         }
-
     }
 
     // this method is called when the date is changed
@@ -356,6 +473,19 @@ public class DetailsActivity extends AppCompatActivity {
         years.setValue(year);
     }
 
+    // used to set the values of the date picker
+    public void addTimePicker(int hour, int minute, int amPM)
+    {
+        NumberPicker hourPicker = (NumberPicker)findViewById(R.id.hourPicker);
+        hourPicker.setValue(hour);
+
+        NumberPicker minutePicker = (NumberPicker)findViewById(R.id.minutePicker);
+        minutePicker.setValue(minute);
+
+        NumberPicker amPmPicker = (NumberPicker)findViewById(R.id.amPmPicker);
+        amPmPicker.setValue(amPM);
+    }
+
     public void initializeNumberPicker()
     {
         NumberPicker monthPicker = (NumberPicker)findViewById(R.id.monthPicker);
@@ -386,6 +516,48 @@ public class DetailsActivity extends AppCompatActivity {
                 setDaysYearChange(picker, oldVal, newVal);
             }
         });
+    }
+
+    public void initializeTimePicker()
+    {
+        NumberPicker hourPicker = (NumberPicker)findViewById(R.id.hourPicker);
+        hourPicker.setMinValue(1);
+        hourPicker.setMaxValue(12);
+        //hourPicker.setDisplayedValues( new String[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" } );
+        /*hourPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                set(picker, oldVal, newVal);
+            }
+        });
+        */
+        NumberPicker minutePicker = (NumberPicker)findViewById(R.id.minutePicker);
+        minutePicker.setMinValue(0);
+        minutePicker.setMaxValue(59);
+        minutePicker.setDisplayedValues( new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11",
+        "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34",
+        "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55",
+        "56", "57", "58", "59"} );
+        /*
+        dates.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                dateChanged(picker, oldVal, newVal);
+            }
+        });
+         */
+        NumberPicker amPmPicker = (NumberPicker)findViewById(R.id.amPmPicker);
+        amPmPicker.setMinValue(0);
+        amPmPicker.setMaxValue(1);
+        /*
+        years.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                setDaysYearChange(picker, oldVal, newVal);
+            }
+        });
+         */
+        amPmPicker.setDisplayedValues( new String[] {"AM", "PM"});
     }
 
     @Override

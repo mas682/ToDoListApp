@@ -225,8 +225,6 @@
                     app:layout_constraintStart_toEndOf="@id/alarmTextView"
                     app:layout_constraintTop_toBottomOf="@id/daySwitchTextDivider" />
 
-
-
                 <View
                     android:id="@+id/textNumPickerDivider"
                     android:layout_width="match_parent"
@@ -262,7 +260,6 @@
                     android:background="@color/colorDarkGray"
                     android:clickable="false"
                     android:descendantFocusability="blocksDescendants"
-                    android:textAlignment="viewStart"
                     android:theme="@style/numberPicker"
                     android:visibility="gone"
                     app:layout_constraintEnd_toStartOf="@id/datePicker"
@@ -324,7 +321,9 @@
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/monthPicker" />
+                    app:layout_constraintTop_toBottomOf="@id/datePicker"/>
+                    <!-- will have to deal with this later
+                    app:layout_constraintTop_toBottomOf="@id/monthPicker"/>-->
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/timeSwitch"
@@ -343,6 +342,132 @@
                     app:layout_constraintTop_toTopOf="@id/pickerTimeSwitchDivider"
                     app:track="@drawable/switch_track" />
 
+                <View
+                    android:id="@+id/timeSwitchTextDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height=".5dp"
+                    android:layout_marginStart="16dp"
+                    android:visibility="gone"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/colorPrimary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/timeSwitch" />
+
+                <TextView
+                    android:id="@+id/timeTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Time"
+                    android:onClick="showTimePicker"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="17sp"
+                    app:layout_constraintEnd_toStartOf="@id/timeSetTextView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/timeSwitchTextDivider" />
+
+                <TextView
+                    android:id="@+id/timeSetTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:textAlignment="textEnd"
+                    android:onClick="showTimePicker"
+                    android:textColor="@color/colorGray"
+                    android:textSize="17sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/timeTextView"
+                    app:layout_constraintTop_toBottomOf="@id/timeSwitchTextDivider" />
+
+                <View
+                    android:id="@+id/timeTextPickerDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height=".5dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/colorPrimary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/timeTextView" />
+
+                <NumberPicker
+                    android:id="@+id/paddingStartTimePicker"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/colorDarkGray"
+                    android:clickable="false"
+                    android:descendantFocusability="blocksDescendants"
+                    android:focusable="false"
+                    android:theme="@style/emptyNumberPicker"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toStartOf="@id/hourPicker"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/timeTextPickerDivider" />
+
+                <NumberPicker
+                    android:id="@+id/hourPicker"
+                    android:layout_width="125dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/colorDarkGray"
+                    android:clickable="false"
+                    android:descendantFocusability="blocksDescendants"
+                    android:theme="@style/numberPicker"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toStartOf="@id/minutePicker"
+                    app:layout_constraintStart_toEndOf="@id/paddingStartDatePicker"
+                    app:layout_constraintTop_toBottomOf="@id/timeTextPickerDivider" />
+
+                <NumberPicker
+                    android:id="@+id/minutePicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="100dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="100dp"
+                    android:background="@color/colorDarkGray"
+                    android:clickable="false"
+                    android:descendantFocusability="blocksDescendants"
+                    android:theme="@style/numberPicker"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/timeTextPickerDivider" />
+
+                <NumberPicker
+                    android:id="@+id/amPmPicker"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/colorDarkGray"
+                    android:clickable="false"
+                    android:descendantFocusability="blocksDescendants"
+                    android:theme="@style/numberPicker"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toStartOf="@id/paddingEndTimePicker"
+                    app:layout_constraintStart_toEndOf="@id/minutePicker"
+                    app:layout_constraintTop_toBottomOf="@id/timeTextPickerDivider" />
+
+                <NumberPicker
+                    android:id="@+id/paddingEndTimePicker"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/colorDarkGray"
+                    android:clickable="false"
+                    android:descendantFocusability="blocksDescendants"
+                    android:theme="@style/emptyNumberPicker"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@id/amPmPicker"
+                    app:layout_constraintTop_toBottomOf="@id/timeTextPickerDivider" />
 
                 <View
                     android:id="@+id/reminderBottomDivider"
@@ -352,7 +477,7 @@
                     android:background="@color/colorPrimary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/timeSwitch"
+                    app:layout_constraintTop_toBottomOf="@id/hourPicker"
                     app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
