@@ -63,6 +63,7 @@ public class DetailsActivity extends AppCompatActivity {
             remindAtTime = false;
         }
         // create the reminder object
+        System.out.println("Minute here: " + minute);
         reminder = new Reminder(reminderText, day, month, year, remindOnDay, remindAtTime, hour, minute, amPm);
         // get the remindOnDay switch
         SwitchCompat daySwitch = (SwitchCompat)findViewById(R.id.daySwitch);
@@ -240,20 +241,19 @@ public class DetailsActivity extends AppCompatActivity {
             timeText.setVisibility(View.VISIBLE);
             timeSetText.setVisibility(View.VISIBLE);
             timeSwitchTextDivider.setVisibility(View.VISIBLE);
-            Calendar calendar = Calendar.getInstance();
-            reminder.setHour(calendar.get(Calendar.HOUR));
-            reminder.setMinute(calendar.get(Calendar.MINUTE));
-            int amPm = calendar.get(Calendar.AM_PM);
-            if(amPm == Calendar.AM)
-            {
-                reminder.setAmPm(0);
-            }
-            else
-            {
-                reminder.setAmPm(1);
+            // this will handle if remindAtTime set on activity creation
+            if(!reminder.getRemindAtTime()) {
+                Calendar calendar = Calendar.getInstance();
+                reminder.setHour(calendar.get(Calendar.HOUR));
+                reminder.setMinute(calendar.get(Calendar.MINUTE));
+                int amPm = calendar.get(Calendar.AM_PM);
+                if (amPm == Calendar.AM) {
+                    reminder.setAmPm(0);
+                } else {
+                    reminder.setAmPm(1);
+                }
             }
             // if this is checked, remindOnDay should be true
-            // this will be:
             reminder.setRemindAtTime(true);
             String timeString = formatTime(reminder.getHour(), reminder.getMinute(), reminder.getAmPm());
             timeSetText.setText(timeString);
@@ -324,6 +324,12 @@ public class DetailsActivity extends AppCompatActivity {
             textNumPickerDivider.setVisibility(View.GONE);
             timeSwitch.setVisibility(View.GONE);
             reminder.setRemindOnADay(false);
+            // if the time switch is set to visible, set to not visible
+            if(timeSwitch.isChecked())
+            {
+                timeSwitch.setChecked(false);
+                setTime(timeSwitch);
+            }
         }
     }
 

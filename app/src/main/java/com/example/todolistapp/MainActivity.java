@@ -298,6 +298,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("hour", tempReminder.getHour());
         // get the minutes
         intent.putExtra("minute", tempReminder.getMinute());
+        System.out.println("Minute: " + tempReminder.getMinute());
         // get am/pm
         intent.putExtra("amPm", tempReminder.getAmPm());
         // call the activity with the intent

@@ -60,7 +60,7 @@ public class Reminder {
         priority = "";
     }
 
-    public Reminder(String text, int day, int month, int year, boolean remindOnDay, boolean remindAtTime, int hour, int min, int amPm)
+    public Reminder(String text, int day, int month, int year, boolean remindOnDay, boolean remindAtTime, int hour, int minute, int amPm)
     {
         reminder = text;
         notes = "";
