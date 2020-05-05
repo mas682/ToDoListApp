@@ -389,6 +389,7 @@
                     android:layout_height=".5dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
+                    android:visibility="gone"
                     android:background="@color/colorPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -421,7 +422,7 @@
                     android:theme="@style/numberPicker"
                     android:visibility="gone"
                     app:layout_constraintEnd_toStartOf="@id/minutePicker"
-                    app:layout_constraintStart_toEndOf="@id/paddingStartDatePicker"
+                    app:layout_constraintStart_toEndOf="@id/paddingStartTimePicker"
                     app:layout_constraintTop_toBottomOf="@id/timeTextPickerDivider" />
 
                 <NumberPicker
@@ -459,6 +460,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="0dp"
                     android:background="@color/colorDarkGray"
                     android:clickable="false"
                     android:descendantFocusability="blocksDescendants"

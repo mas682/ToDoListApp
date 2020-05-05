@@ -115,6 +115,10 @@ public class MainActivity extends AppCompatActivity {
         int month = -1;
         int day = -1;
         int year = -1;
+        boolean remindAtTime = false;
+        int hour = 0;
+        int minute = 0;
+        int amPm = 0;
         // array to temporarily hold a value associated with corresponding values
         String values[];
         for(int i = 0; i < tokens.length; i++)
@@ -161,9 +165,29 @@ public class MainActivity extends AppCompatActivity {
             {
                 year = Integer.parseInt(values[1]);
             }
+            // remindAtTime
+            else if(i == 6)
+            {
+                remindAtTime = Boolean.parseBoolean(values[1]);
+            }
+            // hour
+            else if(i == 7)
+            {
+                hour = Integer.parseInt(values[1]);
+            }
+            // minute
+            else if(i == 8)
+            {
+                minute = Integer.parseInt(values[1]);
+            }
+            // AM PM
+            else if(i == 9)
+            {
+                amPm = Integer.parseInt(values[1]);
+            }
         }
         // create a new reminder
-        Reminder tempReminder = new Reminder(reminder, day, month, year, remindOnDay);
+        Reminder tempReminder = new Reminder(reminder, day, month, year, remindOnDay, remindAtTime, hour, minute, amPm);
         // eventually want to set notes here
 
         if(reminders == null)
@@ -268,6 +292,14 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("year", tempReminder.getYear());
         // pass a boolean saying whether set to date
         intent.putExtra("remindOnDay", tempReminder.getRemindOnADay());
+        // pass a boolean saying whether to set time
+        intent.putExtra("remindAtTime", tempReminder.getRemindAtTime());
+        // pass the hour
+        intent.putExtra("hour", tempReminder.getHour());
+        // get the minutes
+        intent.putExtra("minute", tempReminder.getMinute());
+        // get am/pm
+        intent.putExtra("amPm", tempReminder.getAmPm());
         // call the activity with the intent
         startActivityForResult(intent, RESULT_CODE);
     }
@@ -295,6 +327,14 @@ public class MainActivity extends AppCompatActivity {
         int updatedDay = data.getIntExtra("day", -1);
         // get year returned
         int updatedYear = data.getIntExtra("year", -1);
+        // remindAtTime returned
+        boolean remindAtTimeUpdate = data.getBooleanExtra("remindAtTime", false);
+        // get returned hour
+        int updatedHour = data.getIntExtra("hour", 0);
+        // get returned minute
+        int updatedMinute = data.getIntExtra("minute", 0);
+        // get returned AM/PM
+        int updatedAmPm = data.getIntExtra("amPm", 0);
         if(index != -1)
         {
             Reminder tempReminder = reminders.get(index);
@@ -304,6 +344,10 @@ public class MainActivity extends AppCompatActivity {
             tempReminder.setDay(updatedDay);
             tempReminder.setMonth(updatedMonth);
             tempReminder.setYear(updatedYear);
+            tempReminder.setRemindAtTime(remindAtTimeUpdate);
+            tempReminder.setHour(updatedHour);
+            tempReminder.setMinute(updatedMinute);
+            tempReminder.setAmPm(updatedAmPm);
             // get the view id from the reminder
             EditText tempView = (EditText)findViewById(reminders.get(index).getTextId());
             // update the view
