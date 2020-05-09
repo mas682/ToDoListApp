@@ -3,8 +3,13 @@ package com.example.todolistapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -29,6 +34,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     static final int RESULT_CODE = 0;
@@ -304,6 +310,46 @@ public class MainActivity extends AppCompatActivity {
         // call the activity with the intent
         startActivityForResult(intent, RESULT_CODE);
     }
+
+    // this method will be called if remindAtDate or remindAtTime is true upon return
+    // from the details activity
+    //private void addNotification(boolean remindOnDay, int day, int month, int year, boolean remindAtTime, int hour, int minute, int amPm)
+    public void sendNotification(View view)
+    {
+        //Get an instance of NotificationManager
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_launcher_background)
+                        .setContentTitle("Notifications Example")
+                        .setContentText("This is a test notification")
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setPriority(Notification.PRIORITY_HIGH)
+                        .setAutoCancel(true);
+
+        //Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.androidauthority.com/"));
+        //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        //mBuilder.setContentIntent(pendingIntent);
+
+        // Gets an instance of the NotificationManager service
+        //NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        //NotificationManager.notify()
+        //mNotificationManager.notify(001, builder.build());
+        //
+        Intent notificationIntent = new Intent(this, MyNotificationPublisher.class);
+        notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION_ID , 1) ;
+        notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION, builder.build()) ;
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0 , notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE) ;
+        assert alarmManager != null;
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, 1);
+        System.out.println("Time: " + cal.getTime().toString());
+        long delay = cal.getTimeInMillis();
+        alarmManager.set(AlarmManager.RTC_WAKEUP, delay, pendingIntent);
+    }
+
 
     // save the reminders when the back button is pushed
     @Override

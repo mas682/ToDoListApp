@@ -227,8 +227,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
 
-    // then deal with actual notifications or do the time part or time
-    // the time part should be pretty similar to day part
+    // this method is called when the time switch is turned on/off
     public void setTime(View view)
     {
         SwitchCompat timeSwitch = (SwitchCompat)view;
@@ -243,6 +242,9 @@ public class DetailsActivity extends AppCompatActivity {
             timeSwitchTextDivider.setVisibility(View.VISIBLE);
             // this will handle if remindAtTime set on activity creation
             if(!reminder.getRemindAtTime()) {
+                // get the current time
+                // this is done here instead of when clicked to set the actual time because that would
+                // erase any saved times
                 Calendar calendar = Calendar.getInstance();
                 reminder.setHour(calendar.get(Calendar.HOUR));
                 reminder.setMinute(calendar.get(Calendar.MINUTE));
@@ -268,18 +270,12 @@ public class DetailsActivity extends AppCompatActivity {
             timeText.setVisibility(View.GONE);
             timeSetText.setVisibility(View.GONE);
             timeSwitchTextDivider.setVisibility(View.GONE);
+            // reset time to 0 when remind at time shut off
             reminder.setRemindAtTime(false);
             reminder.setHour(0);
             reminder.setMinute(0);
             reminder.setAmPm(0);
         }
-    }
-
-    // this method is called when the date is changed
-    // this simply updates the formatted date
-    public void timeDateChanged(NumberPicker picker, int oldVal, int newVal)
-    {
-        picker.setMaxValue(picker.getMaxValue() + 1);
     }
 
     // this needs to display the fields under the remind me on a day switch
@@ -526,6 +522,7 @@ public class DetailsActivity extends AppCompatActivity {
         alarmText.setText(formatDate(newVal, datePicker.getValue(), yearPicker.getValue()));
     }
 
+    // this gets the text string for the dateAlarm text view
     public String formatDateAlarm(int month, int day, int year) {
         // specify the format the date is in
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", java.util.Locale.ENGLISH);
@@ -546,6 +543,7 @@ public class DetailsActivity extends AppCompatActivity {
         return stringDate;
     }
 
+    //
     public String formatDate(int month, int day, int year)
     {
         // specify the format the date is in
@@ -568,6 +566,7 @@ public class DetailsActivity extends AppCompatActivity {
         return stringDate;
     }
 
+    // this formats the time to a string
     public String formatTime(int hour, int minute, int amPm)
     {
         String amPmString;
@@ -599,7 +598,7 @@ public class DetailsActivity extends AppCompatActivity {
         years.setValue(year);
     }
 
-    // used to set the values of the date picker
+    // used to set the values of the time picker
     public void addTimePicker(int hour, int minute, int amPM)
     {
         NumberPicker hourPicker = (NumberPicker)findViewById(R.id.hourPicker);

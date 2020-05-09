@@ -15,7 +15,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
-        android:onClick="addNewReminderElement"
+        android:onClick="sendNotification"
         app:backgroundTint="@color/design_default_color_on_secondary"
         app:fabCustomSize="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
