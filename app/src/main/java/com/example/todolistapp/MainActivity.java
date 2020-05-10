@@ -311,45 +311,74 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, RESULT_CODE);
     }
 
+
+    // to do:
+    // 1. schedule notifications on return from set details
+    //      - if a intent already exists, delete it and then reschedule? or just update it - done
+    //      - if it does not exist, simply create notification - done
+    // 2. deal with removing the intent if no reminder date/time set - done
+    // 3. format the notification
+    // 4. handle opening either the app or the reminders detail page when clicked on
+    // 5. deal with frequency(Once, daily, weekly, etc.)
+    // 6. look into running these as services or background processes??
+
     // this method will be called if remindAtDate or remindAtTime is true upon return
     // from the details activity
-    //private void addNotification(boolean remindOnDay, int day, int month, int year, boolean remindAtTime, int hour, int minute, int amPm)
-    public void sendNotification(View view)
+    // the id here is the index into the reminders array list
+    public void setNotification(boolean remindOnDay, int day, int month, int year, boolean remindAtTime, int hour, int minute, int amPm, String text, int id)
     {
-        //Get an instance of NotificationManager
+        // get when to set the notification for
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DATE, day);
+        cal.set(Calendar.HOUR, hour);
+        cal.set(Calendar.AM_PM, amPm);
+        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.SECOND, 0);
+        // get the time in milliseconds
+        long delay = cal.getTimeInMillis();
+        // create the notification
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_launcher_background)
-                        .setContentTitle("Notifications Example")
-                        .setContentText("This is a test notification")
+                        .setContentTitle("Reminder")
+                        .setContentText(text)
                         .setDefaults(Notification.DEFAULT_ALL)
                         .setPriority(Notification.PRIORITY_HIGH)
+                        // sets display time
+                        .setWhen(delay)
                         .setAutoCancel(true);
-
-        //Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.androidauthority.com/"));
-        //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        //mBuilder.setContentIntent(pendingIntent);
-
-        // Gets an instance of the NotificationManager service
-        //NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        //NotificationManager.notify()
-        //mNotificationManager.notify(001, builder.build());
-        //
+        // create a intent to call pass to MyNotificaionPublisher
         Intent notificationIntent = new Intent(this, MyNotificationPublisher.class);
-        notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION_ID , 1) ;
+        // pass the notification ID
+        notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION_ID , id);
+        // pass the notification
         notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION, builder.build()) ;
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0 , notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // set up the pending intent
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,id, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // get the alarm manager
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE) ;
         assert alarmManager != null;
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MINUTE, 1);
-        System.out.println("Time: " + cal.getTime().toString());
-        long delay = cal.getTimeInMillis();
+        // set a alarm to cause the notification to be created at the specified time
         alarmManager.set(AlarmManager.RTC_WAKEUP, delay, pendingIntent);
     }
 
+    // this method is called to cancel a existing notfication
+    // this is called on return from the details activity if a time was set for the reminder
+    // and there is now no time corresponding to the reminder
+    // the id is the id of the notification, which is the index into the reminders array
+    public void cancelNotification(int id)
+    {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent myIntent = new Intent(this, MyNotificationPublisher.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // cancel the alarm
+        alarmManager.cancel(pendingIntent);
+        // cancel the notification
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        assert notificationManager != null;
+        notificationManager.cancel(MyNotificationPublisher.TAG_ID, id);
+    }
 
     // save the reminders when the back button is pushed
     @Override
@@ -385,6 +414,7 @@ public class MainActivity extends AppCompatActivity {
         if(index != -1)
         {
             Reminder tempReminder = reminders.get(index);
+            boolean oldRemindOnDay = tempReminder.getRemindOnADay();
             // update the reminder in the array
             tempReminder.setReminder(messageReturned);
             tempReminder.setRemindOnADay(remindOnDayUpdate);
@@ -397,6 +427,19 @@ public class MainActivity extends AppCompatActivity {
             tempReminder.setAmPm(updatedAmPm);
             // get the view id from the reminder
             EditText tempView = (EditText)findViewById(reminders.get(index).getTextId());
+            // if there is a reminder, update it
+            if(remindOnDayUpdate) {
+                setNotification(remindOnDayUpdate, updatedDay, updatedMonth, updatedYear, remindAtTimeUpdate, updatedHour, updatedMinute, updatedAmPm, messageReturned, index);
+            }
+            // if there is not a reminder, see if there was one before
+            else
+            {
+                // if a notification previously existed for this reminder, remove it
+                if(oldRemindOnDay)
+                {
+                    cancelNotification(index);
+                }
+            }
             // update the view
             tempView.setText(messageReturned);
         }
