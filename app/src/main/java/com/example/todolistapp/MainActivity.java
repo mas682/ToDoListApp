@@ -59,6 +59,16 @@ public class MainActivity extends AppCompatActivity {
             t.setText(text);
         }
          */
+        Intent intent = getIntent();
+        boolean fromNotification = intent.getBooleanExtra("notificationInvoked", false);
+        if(fromNotification)
+        {
+            System.out.println("Invoked by notification");
+        }
+        else
+        {
+            System.out.println("Not invoked by notification");
+        }
         boolean opened = openRemindersFile();
         if(!opened)
         {
@@ -70,6 +80,12 @@ public class MainActivity extends AppCompatActivity {
         {
             addNewReminderElement(reminders.get(count).getReminder(), count);
             count++;
+        }
+        // if the main activity was not ran yet, send the intent to onActivityResult
+        // to update the reminder that was opened by the notification
+        if(fromNotification)
+        {
+            onActivityResult(0, 1, intent);
         }
     }
 
@@ -280,11 +296,9 @@ public class MainActivity extends AppCompatActivity {
         saveReminders();
     }
 
-    public void setDetails(View view) {
-        // get the intent to pass data to the details activity
-        Intent intent = new Intent(this, DetailsActivity.class);
-        // get the index into the Reminders ArrayList
-        int index = Integer.parseInt((String)view.getTag());
+    // this simply sets the arguments for the intent
+    public void setDetailsActivityArgs(Intent intent, int index)
+    {
         Reminder tempReminder = reminders.get(index);
         // pass the reminder text
         intent.putExtra("reminder", tempReminder.getReminder());
@@ -307,20 +321,31 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("Minute: " + tempReminder.getMinute());
         // get am/pm
         intent.putExtra("amPm", tempReminder.getAmPm());
+    }
+
+    public void setDetails(View view) {
+        // get the intent to pass data to the details activity
+        Intent intent = new Intent(this, DetailsActivity.class);
+        // get the index into the Reminders ArrayList
+        int index = Integer.parseInt((String)view.getTag());
+        // set the arguments to pass to the activity
+        setDetailsActivityArgs(intent, index);
         // call the activity with the intent
         startActivityForResult(intent, RESULT_CODE);
     }
 
 
     // to do:
-    // 1. schedule notifications on return from set details
-    //      - if a intent already exists, delete it and then reschedule? or just update it - done
-    //      - if it does not exist, simply create notification - done
-    // 2. deal with removing the intent if no reminder date/time set - done
-    // 3. format the notification
-    // 4. handle opening either the app or the reminders detail page when clicked on
-    // 5. deal with frequency(Once, daily, weekly, etc.)
-    // 6. look into running these as services or background processes??
+    // 1. deal with opening the details activity on notification click
+    //      - add all the data needed to open the intent to the intent - done
+// could have a issue if a update comes in and the user does not open it until later and the reminder is changed
+// this could then alter the reminder...
+    //      - also need to add a boolean flag to let details activity know this was opened by a notification - done
+    //      - then when back hit, need to open a main activity intent passing a boolean to indicate that - done
+    //      - this is being started this way so it appropriately updates the reminders
+    // 2. format the notification
+    // 3. deal with frequency field and update notifications(Once, daily, weekly, etc.)
+    // 4. look into running these as services or background processes??
 
     // this method will be called if remindAtDate or remindAtTime is true upon return
     // from the details activity
@@ -338,6 +363,13 @@ public class MainActivity extends AppCompatActivity {
         // get the time in milliseconds
         long delay = cal.getTimeInMillis();
         // create the notification
+        Intent notificationClickedIntent = new Intent(this, DetailsActivity.class);
+        //Intent notificationClickedIntent = new Intent(this, MainActivity.class);
+        notificationClickedIntent.putExtra("notificationInvoked", true);
+        // set the remaining arguments to pass
+        setDetailsActivityArgs(notificationClickedIntent, id);
+        PendingIntent clickedIntent = PendingIntent.getActivity(this, 0,
+                notificationClickedIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_launcher_background)
@@ -345,8 +377,10 @@ public class MainActivity extends AppCompatActivity {
                         .setContentText(text)
                         .setDefaults(Notification.DEFAULT_ALL)
                         .setPriority(Notification.PRIORITY_HIGH)
+                        .setContentIntent(clickedIntent)
                         // sets display time
                         .setWhen(delay)
+                        // cancels the notification when the user clicks on it
                         .setAutoCancel(true);
         // create a intent to call pass to MyNotificaionPublisher
         Intent notificationIntent = new Intent(this, MyNotificationPublisher.class);
@@ -361,6 +395,8 @@ public class MainActivity extends AppCompatActivity {
         assert alarmManager != null;
         // set a alarm to cause the notification to be created at the specified time
         alarmManager.set(AlarmManager.RTC_WAKEUP, delay, pendingIntent);
+        // to set repeating notifications, use this method
+        //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, delay, AlarmManager., pendingIntent);
     }
 
     // this method is called to cancel a existing notfication

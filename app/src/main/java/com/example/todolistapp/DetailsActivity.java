@@ -23,6 +23,7 @@ import java.util.Date;
 public class DetailsActivity extends AppCompatActivity {
 
     private Reminder reminder;
+    private Boolean notificationInvoked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,7 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
         // get the intent that was sent over
         Intent intent = getIntent();
+        notificationInvoked = intent.getBooleanExtra("notificationInvoked", false);
         // get the reminder text that was passed over
         String reminderText = intent.getStringExtra("reminder");
         // get the day
@@ -681,7 +683,15 @@ public class DetailsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intentWithResult = new Intent();
+        Intent intentWithResult;
+        if(notificationInvoked)
+        {
+            intentWithResult = new Intent(this, MainActivity.class);
+            intentWithResult.putExtra("notificationInvoked", true);
+        }
+        else {
+            intentWithResult = new Intent();
+        }
         String reminderText = "";
         EditText tempText = (EditText)findViewById(R.id.editText3);
         reminderText = tempText.getText().toString();
@@ -704,7 +714,14 @@ public class DetailsActivity extends AppCompatActivity {
         intentWithResult.putExtra("hour", reminder.getHour());
         intentWithResult.putExtra("minute", reminder.getMinute());
         intentWithResult.putExtra("amPm", reminder.getAmPm());
-        setResult(1, intentWithResult);
+        if(notificationInvoked)
+        {
+            startActivity(intentWithResult);
+        }
+        else
+        {
+            setResult(1, intentWithResult);
+        }
         finish();
     }
 }
