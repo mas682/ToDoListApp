@@ -18,9 +18,10 @@ public class Reminder {
     private String repeat;
     private String priority;
     private int textId;
+    private int UID;
 
 
-    public Reminder(String text)
+    public Reminder(String text, int UID)
     {
         Calendar calendar = Calendar.getInstance();
         reminder = text;
@@ -39,28 +40,10 @@ public class Reminder {
         amPm = 0;
         repeat = "";
         priority = "";
+        this.UID = UID;
     }
 
-    // this will be removed eventually?
-    public Reminder(String text, int day, int month, int year, boolean remindOnDay)
-    {
-        reminder = text;
-        notes = "";
-        remindAtLocation = false;
-        location = "";
-        this.remindOnDay = remindOnDay;
-        this.day = day;
-        this.month = month;
-        this.year = year;
-        remindAtTime = false;
-        hour = 0;
-        minute = 0;
-        amPm = 0;
-        repeat = "";
-        priority = "";
-    }
-
-    public Reminder(String text, int day, int month, int year, boolean remindOnDay, boolean remindAtTime, int hour, int minute, int amPm)
+    public Reminder(String text, int day, int month, int year, boolean remindOnDay, boolean remindAtTime, int hour, int minute, int amPm, int UID)
     {
         reminder = text;
         notes = "";
@@ -76,6 +59,7 @@ public class Reminder {
         this.amPm = amPm;
         repeat = "";
         priority = "";
+        this.UID = UID;
     }
 
 
@@ -95,7 +79,7 @@ public class Reminder {
         // this needs updates, and then will have to update the main page as well
         //return "reminder:" + reminder + ";notes:" + notes + ";\n";
         return "reminder:" + reminder + ";notes:" + notes + ";remindOnDay:" + remindOnDay + ";month:" + month + ";day:" + day + ";year:" + year + ";remindAtTime:" +
-                remindAtTime + ";hour:" + hour + ";minute:" + minute + ";amPm:" + amPm + "\n";
+                remindAtTime + ";hour:" + hour + ";minute:" + minute + ";amPm:" + amPm + ";UID:" + UID + "\n";
     }
 
     public int getTextId()
@@ -184,6 +168,16 @@ public class Reminder {
     public void setRemindAtTime(boolean remindAtTime)
     {
         this.remindAtTime = remindAtTime;
+    }
+
+    public int getUID()
+    {
+        return UID;
+    }
+
+    public void setUID(int UID)
+    {
+        this.UID = UID;
     }
 
 }

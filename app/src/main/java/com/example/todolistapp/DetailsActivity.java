@@ -48,6 +48,8 @@ public class DetailsActivity extends AppCompatActivity {
         int minute = intent.getIntExtra("minute", 0);
         // get am/pm
         int amPm = intent.getIntExtra("amPm", 0);
+        // set to 0 as the UID does not matter here
+        int UID = 0;
         // if day is -1, no date has been set for this reminder yet, so use the current date
         if(day == -1)
         {
@@ -65,8 +67,7 @@ public class DetailsActivity extends AppCompatActivity {
             remindAtTime = false;
         }
         // create the reminder object
-        System.out.println("Minute here: " + minute);
-        reminder = new Reminder(reminderText, day, month, year, remindOnDay, remindAtTime, hour, minute, amPm);
+        reminder = new Reminder(reminderText, day, month, year, remindOnDay, remindAtTime, hour, minute, amPm, UID);
         // get the remindOnDay switch
         SwitchCompat daySwitch = (SwitchCompat)findViewById(R.id.daySwitch);
         SwitchCompat timeSwitch = (SwitchCompat)findViewById(R.id.timeSwitch);

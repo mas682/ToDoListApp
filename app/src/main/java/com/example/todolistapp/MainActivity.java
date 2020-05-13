@@ -39,6 +39,7 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
     static final int RESULT_CODE = 0;
     private ArrayList<Reminder> reminders;
+    private int reminderUIdCounter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         boolean opened = openRemindersFile();
         if(!opened)
         {
+            reminderUIdCounter = Integer.MIN_VALUE;
             addReminder("");
         }
         // consider using asynctask to load data?
@@ -107,7 +109,16 @@ public class MainActivity extends AppCompatActivity {
             String line;
             int i = 1;
             while ((line = bufferedReader.readLine()) != null) {
-                //sb.append(line);
+                if(i == 1)
+                {
+                    String [] values = line.split(":");
+                    if(values.length > 1)
+                    {
+                        reminderUIdCounter = Integer.parseInt(values[1]);
+                    }
+                    i++;
+                    continue;
+                }
                 addReminder(line);
                 i++;
             }
@@ -141,6 +152,16 @@ public class MainActivity extends AppCompatActivity {
         int hour = 0;
         int minute = 0;
         int amPm = 0;
+        int UID = 0;
+        if(reminderString.equals(""))
+        {
+            UID = reminderUIdCounter;
+            reminderUIdCounter++;
+            if(reminderUIdCounter == Integer.MAX_VALUE)
+            {
+                reminderUIdCounter = Integer.MIN_VALUE;
+            }
+        }
         // array to temporarily hold a value associated with corresponding values
         String values[];
         for(int i = 0; i < tokens.length; i++)
@@ -207,10 +228,13 @@ public class MainActivity extends AppCompatActivity {
             {
                 amPm = Integer.parseInt(values[1]);
             }
+            else if(i == 10)
+            {
+                UID = Integer.parseInt(values[1]);
+            }
         }
         // create a new reminder
-        Reminder tempReminder = new Reminder(reminder, day, month, year, remindOnDay, remindAtTime, hour, minute, amPm);
-        // eventually want to set notes here
+        Reminder tempReminder = new Reminder(reminder, day, month, year, remindOnDay, remindAtTime, hour, minute, amPm, UID);
 
         if(reminders == null)
         {
@@ -238,6 +262,9 @@ public class MainActivity extends AppCompatActivity {
         String file = "reminders";
         String data = "";
         // combine the data into one string
+        // add the counter to the file
+        // this is used to give unique id's to the reminders
+        data = "reminderUIdCounter:" + reminderUIdCounter + "\n";
         for(int i = 0; i < reminders.size(); i++)
         {
             data = data + reminders.get(i).toString();
@@ -318,7 +345,6 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("hour", tempReminder.getHour());
         // get the minutes
         intent.putExtra("minute", tempReminder.getMinute());
-        System.out.println("Minute: " + tempReminder.getMinute());
         // get am/pm
         intent.putExtra("amPm", tempReminder.getAmPm());
     }
@@ -338,10 +364,18 @@ public class MainActivity extends AppCompatActivity {
     // to do:
     // 1. deal with opening the details activity on notification click
     //      - add all the data needed to open the intent to the intent - done
-// could have a issue if a update comes in and the user does not open it until later and the reminder is changed
-// this could then alter the reminder...
-    //      - also need to add a boolean flag to let details activity know this was opened by a notification - done
-    //      - then when back hit, need to open a main activity intent passing a boolean to indicate that - done
+    // could have a issue if a update comes in and the user does not open it until later and the reminder is changed
+        // potential solution: update notification any time a the text is updated.... - this should be done but test
+    // issue: need to make it so a notification is not set if the date/time is past the current date/time?
+        // just create calendar objects and compare
+        // but when dealing with repeating reminders, may have to make a change
+        // also have to deal with the onchange text listener for this class to do this
+    // created UID for each reminder because using the index into the array would not be correct when reminders are removed,
+    // especially when dealing with the associated notifications
+    // next step: deal with deleting reminders
+        // will have to first delete any associated notifications
+        // then remove from arraylist
+
     //      - this is being started this way so it appropriately updates the reminders
     // 2. format the notification
     // 3. deal with frequency field and update notifications(Once, daily, weekly, etc.)
@@ -350,15 +384,15 @@ public class MainActivity extends AppCompatActivity {
     // this method will be called if remindAtDate or remindAtTime is true upon return
     // from the details activity
     // the id here is the index into the reminders array list
-    public void setNotification(boolean remindOnDay, int day, int month, int year, boolean remindAtTime, int hour, int minute, int amPm, String text, int id)
+    public void setNotification(Reminder tempReminder, int id)
     {
         // get when to set the notification for
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DATE, day);
-        cal.set(Calendar.HOUR, hour);
-        cal.set(Calendar.AM_PM, amPm);
-        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.MONTH, tempReminder.getMonth());
+        cal.set(Calendar.DATE, tempReminder.getDay());
+        cal.set(Calendar.HOUR, tempReminder.getHour());
+        cal.set(Calendar.AM_PM, tempReminder.getAmPm());
+        cal.set(Calendar.MINUTE, tempReminder.getMinute());
         cal.set(Calendar.SECOND, 0);
         // get the time in milliseconds
         long delay = cal.getTimeInMillis();
@@ -374,7 +408,7 @@ public class MainActivity extends AppCompatActivity {
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_launcher_background)
                         .setContentTitle("Reminder")
-                        .setContentText(text)
+                        .setContentText(tempReminder.getReminder())
                         .setDefaults(Notification.DEFAULT_ALL)
                         .setPriority(Notification.PRIORITY_HIGH)
                         .setContentIntent(clickedIntent)
@@ -385,11 +419,11 @@ public class MainActivity extends AppCompatActivity {
         // create a intent to call pass to MyNotificaionPublisher
         Intent notificationIntent = new Intent(this, MyNotificationPublisher.class);
         // pass the notification ID
-        notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION_ID , id);
+        notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION_ID, tempReminder.getUID());
         // pass the notification
-        notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION, builder.build()) ;
+        notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION, builder.build());
         // set up the pending intent
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,id, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, tempReminder.getUID(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         // get the alarm manager
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE) ;
         assert alarmManager != null;
@@ -465,7 +499,7 @@ public class MainActivity extends AppCompatActivity {
             EditText tempView = (EditText)findViewById(reminders.get(index).getTextId());
             // if there is a reminder, update it
             if(remindOnDayUpdate) {
-                setNotification(remindOnDayUpdate, updatedDay, updatedMonth, updatedYear, remindAtTimeUpdate, updatedHour, updatedMinute, updatedAmPm, messageReturned, index);
+                setNotification(tempReminder, index);
             }
             // if there is not a reminder, see if there was one before
             else
@@ -725,8 +759,17 @@ public class MainActivity extends AppCompatActivity {
         textView.addTextChangedListener(new TextWatcherExtended(index) {
             @Override
             public void afterTextChanged(Editable s) {
-                Log.i("Text", s.toString());
-                reminders.get(this.getIndex()).setReminder(s.toString());
+                int index = this.getIndex();
+                Reminder tempReminder = reminders.get(index);
+                tempReminder.setReminder(s.toString());
+                // if the text is updated, need to update notification or it could be wrong
+                // this could be slow though? may want to do in background...
+    // need to make it so that if time is past this date, no notifcation set
+                if(tempReminder.getRemindOnADay())
+                {
+                    setNotification(tempReminder, index);
+                }
+
             }
         });
         // set the id for the text element in the reminder array
