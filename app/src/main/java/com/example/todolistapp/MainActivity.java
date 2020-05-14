@@ -1,6 +1,7 @@
 package com.example.todolistapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.NotificationCompat;
@@ -525,6 +526,7 @@ public class MainActivity extends AppCompatActivity {
         // Get the activity main constraint layout
         ConstraintLayout parentLayout = (ConstraintLayout) findViewById(R.id.activity_main);
         int numViewElems = parentLayout.getChildCount();
+        System.out.println("Child count: " + numViewElems);
         // get the last added divider view's index
         int lastDivider = numViewElems - 1;
         // get the last added divider view
@@ -737,10 +739,11 @@ public class MainActivity extends AppCompatActivity {
         The textView argument is the view to be changed.
         The index is the index into the arrayList for the reminders.
     */
-    public void setEditTextValues(EditText textView, int index)
+    public void setEditTextValues(final EditText textView, int index)
     {
         // get a Id for the new text view
         textView.setId(View.generateViewId());
+        System.out.println(textView.getId());
         // set the width and height of the new view
         textView.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT,
                 ConstraintLayout.LayoutParams.WRAP_CONTENT));
@@ -756,6 +759,32 @@ public class MainActivity extends AppCompatActivity {
         textView.setTextSize(18);
         // set the text to the passed string
         textView.setText(reminders.get(index).getReminder());
+        textView.setOnFocusChangeListener(new FocusListener(index) {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus)
+                {
+                    EditText textView = (EditText)v;
+                    if(textView.getText().toString().equals(""))
+                    {
+                        int index = getIndex();
+                        ConstraintLayout parentLayout = (ConstraintLayout) findViewById(R.id.activity_main);
+                        // get the index of the text view to so you can find all other views related to it
+                        int textViewId = parentLayout.indexOfChild(textView);
+                        RadioButton radioButton = (RadioButton)parentLayout.getChildAt(textViewId - 1);
+                        FloatingActionButton infoButton = (FloatingActionButton)parentLayout.getChildAt(textViewId + 1);
+                        View divider = parentLayout.getChildAt(textViewId + 2);
+                        // need to handle resetting constraints for views above/below the ones removing
+                        parentLayout.removeView(divider);
+                        parentLayout.removeView(infoButton);
+                        parentLayout.removeView(textView);
+                        parentLayout.removeView(radioButton);
+                        reminders.remove(index);
+                        // will also have to remove any reminders..
+                    }
+                }
+            }
+        });
         textView.addTextChangedListener(new TextWatcherExtended(index) {
             @Override
             public void afterTextChanged(Editable s) {
@@ -765,11 +794,9 @@ public class MainActivity extends AppCompatActivity {
                 // if the text is updated, need to update notification or it could be wrong
                 // this could be slow though? may want to do in background...
     // need to make it so that if time is past this date, no notifcation set
-                if(tempReminder.getRemindOnADay())
-                {
+                if(tempReminder.getRemindOnADay()) {
                     setNotification(tempReminder, index);
                 }
-
             }
         });
         // set the id for the text element in the reminder array
