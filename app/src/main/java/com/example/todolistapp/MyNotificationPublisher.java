@@ -12,6 +12,7 @@ public class MyNotificationPublisher extends BroadcastReceiver {
     // this is executed when a alarm goes off to kick off a notification
     @Override
     public void onReceive (Context context , Intent intent) {
+        System.out.println("Executing");
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notification = intent.getParcelableExtra(NOTIFICATION) ;
         int id = intent.getIntExtra( NOTIFICATION_ID , 0 );

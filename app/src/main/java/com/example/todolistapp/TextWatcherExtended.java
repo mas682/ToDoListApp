@@ -7,10 +7,10 @@ public class TextWatcherExtended implements TextWatcher {
 
     private int index;
 
-    public TextWatcherExtended(int arrayIndex)
+    public TextWatcherExtended(int index)
     {
         super();
-        index = arrayIndex;
+        this.index = index;
 
     }
 

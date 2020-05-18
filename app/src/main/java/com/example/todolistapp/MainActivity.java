@@ -1,7 +1,6 @@
 package com.example.todolistapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.NotificationCompat;
@@ -22,6 +21,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -360,24 +360,13 @@ public class MainActivity extends AppCompatActivity {
         // call the activity with the intent
         startActivityForResult(intent, RESULT_CODE);
     }
-
-
+    
     // to do:
-    // 1. deal with opening the details activity on notification click
-    //      - add all the data needed to open the intent to the intent - done
-    // could have a issue if a update comes in and the user does not open it until later and the reminder is changed
-        // potential solution: update notification any time a the text is updated.... - this should be done but test
-    // issue: need to make it so a notification is not set if the date/time is past the current date/time?
-        // just create calendar objects and compare
-        // but when dealing with repeating reminders, may have to make a change
-        // also have to deal with the onchange text listener for this class to do this
-    // created UID for each reminder because using the index into the array would not be correct when reminders are removed,
-    // especially when dealing with the associated notifications
-    // next step: deal with deleting reminders
-        // will have to first delete any associated notifications
-        // then remove from arraylist
-
-    //      - this is being started this way so it appropriately updates the reminders
+    // 1. issue: need to make it so a notification is not set if the date/time is past the current date/time?
+    // kind of done but need to handle repeating notifications
+    // also have to deal with case where remind on day still set but remind at time no longer set so the notification
+    // will be changed
+        // this may work already as you reset the time if time not set...
     // 2. format the notification
     // 3. deal with frequency field and update notifications(Once, daily, weekly, etc.)
     // 4. look into running these as services or background processes??
@@ -399,7 +388,6 @@ public class MainActivity extends AppCompatActivity {
         long delay = cal.getTimeInMillis();
         // create the notification
         Intent notificationClickedIntent = new Intent(this, DetailsActivity.class);
-        //Intent notificationClickedIntent = new Intent(this, MainActivity.class);
         notificationClickedIntent.putExtra("notificationInvoked", true);
         // set the remaining arguments to pass
         setDetailsActivityArgs(notificationClickedIntent, id);
@@ -423,7 +411,7 @@ public class MainActivity extends AppCompatActivity {
         notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION_ID, tempReminder.getUID());
         // pass the notification
         notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION, builder.build());
-        // set up the pending intent
+        // set up the pending intent, the request code identifies the intent for future changes
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, tempReminder.getUID(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         // get the alarm manager
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE) ;
@@ -498,21 +486,15 @@ public class MainActivity extends AppCompatActivity {
             tempReminder.setAmPm(updatedAmPm);
             // get the view id from the reminder
             EditText tempView = (EditText)findViewById(reminders.get(index).getTextId());
-            // if there is a reminder, update it
-            if(remindOnDayUpdate) {
-                setNotification(tempReminder, index);
-            }
-            // if there is not a reminder, see if there was one before
-            else
-            {
-                // if a notification previously existed for this reminder, remove it
-                if(oldRemindOnDay)
-                {
-                    cancelNotification(index);
-                }
-            }
-            // update the view
+            // update the view, this will also call setNotification as the view listener kicks off
+            // but setNotification will not be called if remindOnDay is false
             tempView.setText(messageReturned);
+            // if a notification previously existed for this reminder and no longer does, remove it
+            if(oldRemindOnDay && !remindOnDayUpdate)
+            {
+                cancelNotification(tempReminder.getUID());
+            }
+            // also have to deal with case where remind on day still set but remind at time no longer set
         }
         // for testing
         System.out.println("Result code = " + resultCode);
@@ -526,13 +508,14 @@ public class MainActivity extends AppCompatActivity {
         // Get the activity main constraint layout
         ConstraintLayout parentLayout = (ConstraintLayout) findViewById(R.id.activity_main);
         int numViewElems = parentLayout.getChildCount();
-        System.out.println("Child count: " + numViewElems);
         // get the last added divider view's index
         int lastDivider = numViewElems - 1;
         // get the last added divider view
         View lastDiv = parentLayout.getChildAt(lastDivider);
         // create a new EditText view
         EditText textView = new EditText(MainActivity.this);
+        // set the text view as the focus so that if left empty it will be removed
+        textView.requestFocus();
         // set the EditText view's attirbutes
         setEditTextValues(textView, index);
         // create a new RadioButton view
@@ -609,8 +592,6 @@ public class MainActivity extends AppCompatActivity {
     {
         // get the number of views in the layout already
         int numViewElems = parentLayout.getChildCount();
-        // add the view to the activity main layout
-        // the numViewElems is the index at which to add the view
         parentLayout.addView(radioButton, numViewElems);
         parentLayout.addView(textView, numViewElems + 1);
         parentLayout.addView(infoButton, numViewElems + 2);
@@ -743,7 +724,6 @@ public class MainActivity extends AppCompatActivity {
     {
         // get a Id for the new text view
         textView.setId(View.generateViewId());
-        System.out.println(textView.getId());
         // set the width and height of the new view
         textView.setLayoutParams(new ViewGroup.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT,
                 ConstraintLayout.LayoutParams.WRAP_CONTENT));
@@ -760,42 +740,109 @@ public class MainActivity extends AppCompatActivity {
         // set the text to the passed string
         textView.setText(reminders.get(index).getReminder());
         textView.setOnFocusChangeListener(new FocusListener(index) {
+            // may eventually want to order notifications based off date??
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus)
                 {
                     EditText textView = (EditText)v;
+                    // if a reminders text is empty
                     if(textView.getText().toString().equals(""))
                     {
                         int index = getIndex();
                         ConstraintLayout parentLayout = (ConstraintLayout) findViewById(R.id.activity_main);
                         // get the index of the text view to so you can find all other views related to it
                         int textViewId = parentLayout.indexOfChild(textView);
-                        RadioButton radioButton = (RadioButton)parentLayout.getChildAt(textViewId - 1);
-                        FloatingActionButton infoButton = (FloatingActionButton)parentLayout.getChildAt(textViewId + 1);
-                        View divider = parentLayout.getChildAt(textViewId + 2);
+                        int counter = index;
+                        int nextViewId;
+                        // if this is the last reminder in the view
+                        if(index == reminders.size() -1)
+                        {
+                            nextViewId = textViewId;
+                        }
+                        else
+                        {
+                            // otherwise, set the index to the next reminder
+                            nextViewId = textViewId + 4;
+                        }
+                        EditText tempView;
+                        // while not at the last reminder visible
+                        while(counter < reminders.size() - 1)
+                        {
+                            // if this is the first iteration
+                            if(counter == index)
+                            {
+                                tempView = (EditText)v;
+                            }
+                            else
+                            {
+                                // get the next edit text view
+                                tempView = (EditText)parentLayout.getChildAt(nextViewId);
+                                // increment the nextViewId
+                                nextViewId += 4;
+                            }
+                            // change the text to the next reminder
+                            Reminder tempReminder = reminders.get(counter + 1);
+                            // update which edit text view holds the reminder
+                            tempReminder.setTextId(tempView.getId());
+                            // update the text of the view
+                            tempView.setText(tempReminder.getReminder());
+                            // increment to next reminder
+                            counter++;
+                        }
+                        // get the last reminders view's
+                        RadioButton radioButton = (RadioButton)parentLayout.getChildAt(nextViewId - 1);
+                        EditText lastTextView = (EditText)parentLayout.getChildAt(nextViewId);
+                        ViewParent parent = lastTextView.getParent();
+                        FloatingActionButton infoButton = (FloatingActionButton)parentLayout.getChildAt(nextViewId + 1);
+                        View divider = parentLayout.getChildAt(nextViewId + 2);
+                        // make it so that the view being removed is not focused
+                        lastTextView.setFocusable(false);
                         // need to handle resetting constraints for views above/below the ones removing
                         parentLayout.removeView(divider);
                         parentLayout.removeView(infoButton);
-                        parentLayout.removeView(textView);
+                        parentLayout.removeView(lastTextView);
                         parentLayout.removeView(radioButton);
-                        reminders.remove(index);
-                        // will also have to remove any reminders..
+                        Reminder removed = reminders.remove(index);
+                        // remove the reminder if there is one
+                        // may also want to actually check the date and if repeating or not
+                        if(removed.getRemindOnADay())
+                        {
+                            cancelNotification(removed.getUID());
+                        }
                     }
                 }
             }
         });
         textView.addTextChangedListener(new TextWatcherExtended(index) {
             @Override
+            // this will execute ANY time the text is changed for a edit text view
             public void afterTextChanged(Editable s) {
-                int index = this.getIndex();
-                Reminder tempReminder = reminders.get(index);
-                tempReminder.setReminder(s.toString());
-                // if the text is updated, need to update notification or it could be wrong
-                // this could be slow though? may want to do in background...
-    // need to make it so that if time is past this date, no notifcation set
-                if(tempReminder.getRemindOnADay()) {
-                    setNotification(tempReminder, index);
+                // get the index into the reminders array
+                int index = getIndex();
+                // get the reminder
+                Reminder reminder = reminders.get(index);
+                // update the reminder
+                reminder.setReminder(s.toString());
+                // if remind on a day, update the existing reminder as it will be incorrect if
+                // not updated when it goes off
+                if(reminder.getRemindOnADay()) {
+                    // create a calendar for the notification time
+                    Calendar cal = Calendar.getInstance();
+                    cal.set(Calendar.MONTH, reminder.getMonth());
+                    cal.set(Calendar.DATE, reminder.getDay());
+                    cal.set(Calendar.HOUR, reminder.getHour());
+                    cal.set(Calendar.AM_PM, reminder.getAmPm());
+                    cal.set(Calendar.MINUTE, reminder.getMinute());
+                    cal.set(Calendar.SECOND, 0);
+                    // get the current time/date
+                    Calendar current = Calendar.getInstance();
+                    // if the notification did not happen yet
+                    // eventually will have to deal with repeating notifications
+                    if(current.compareTo(cal) <= 0)
+                    {
+                        setNotification(reminder, index);
+                    }
                 }
             }
         });
