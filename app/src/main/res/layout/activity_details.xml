@@ -44,7 +44,7 @@
             android:layout_marginEnd="8dp"
             android:text="Details"
             android:textAlignment="center"
-            android:textColor="@color/design_default_color_on_primary"
+            android:textColor="@color/colorWhite"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="@id/detailBoxHeader"
             app:layout_constraintStart_toStartOf="@id/detailBoxHeader"
@@ -87,10 +87,11 @@
                     android:id="@+id/divider2"
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/editText3"/>
 
                 <EditText
                     android:id="@+id/editText3"
@@ -108,7 +109,7 @@
                     android:textColorHint="@color/colorPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/divider2" />
 
                 <View
                     android:id="@+id/divider3"
@@ -116,7 +117,7 @@
                     android:layout_height=".3dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/editText3" />
@@ -143,10 +144,11 @@
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
                     android:layout_marginTop="8dp"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/editText4"
-                    app:layout_constraintTop_toBottomOf="@id/editText4" />
+                    app:layout_constraintTop_toBottomOf="@id/editText4"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -155,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:background="@color/colorDarkGray"
-                android:elevation="@dimen/cardview_default_elevation"
+                android:elevation="6dp"
                 app:layout_constraintEnd_toEndOf="@id/detailBoxMain"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/reminderNotesBox">
@@ -164,9 +166,10 @@
                     android:id="@+id/reminderTopDivider"
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/daySwitch"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -177,13 +180,13 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:text="Remind me on a day"
-                    android:textColor="@color/colorGray"
+                    android:textColor="@color/colorWhite"
                     android:textSize="17sp"
                     android:theme="@style/SwitchCompatStyle"
                     android:thumb="@drawable/switch_circle_button"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/reminderTopDivider"
                     app:track="@drawable/switch_track" />
 
                 <View
@@ -192,7 +195,7 @@
                     android:layout_height=".5dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/daySwitch" />
@@ -232,7 +235,7 @@
                     android:layout_height=".5dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/alarmTextView" />
@@ -318,7 +321,7 @@
                     android:layout_height=".5dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorDivider"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -334,7 +337,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:text="Remind me at a time"
-                    android:textColor="@color/colorGray"
+                    android:textColor="@color/colorWhite"
                     android:textSize="17sp"
                     android:theme="@style/SwitchCompatStyle"
                     android:thumb="@drawable/switch_circle_button"
@@ -350,7 +353,7 @@
                     android:layout_marginStart="16dp"
                     android:visibility="gone"
                     android:layout_marginTop="8dp"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/timeSwitch" />
@@ -391,7 +394,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:visibility="gone"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/timeTextView" />
@@ -477,7 +480,7 @@
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
                     android:layout_marginTop="8dp"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorDivider"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/hourPicker"
@@ -491,7 +494,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:background="@color/colorDarkGray"
-                android:elevation="@dimen/cardview_default_elevation"
+                android:elevation="6dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/repeatBox">
@@ -500,7 +503,7 @@
                     android:id="@+id/locationBoxDivTop"
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -513,13 +516,14 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:text="Remind me at a location"
-                    android:textColor="@color/colorGray"
+                    android:textColor="@color/colorWhite"
                     android:textSize="17sp"
                     android:theme="@style/SwitchCompatStyle"
                     android:thumb="@drawable/switch_circle_button"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/locationBoxDivTop"
+                    app:layout_constraintBottom_toTopOf="@id/locationBoxDivBottom"
                     app:track="@drawable/switch_track" />
 
                 <View
@@ -527,8 +531,8 @@
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="1dp"
-                    android:background="@color/colorPrimary"
+                    android:layout_marginBottom="0dp"
+                    android:background="@color/colorDivider"
                     app:layout_constraintBottom_toBottomOf="@id/locationBox"
                     app:layout_constraintEnd_toEndOf="@id/locationBox"
                     app:layout_constraintStart_toStartOf="@id/locationBox"
@@ -542,7 +546,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:background="@color/colorDarkGray"
-                android:elevation="@dimen/cardview_default_elevation"
+                android:elevation="6dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/locationBox">
@@ -552,7 +556,7 @@
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
                     android:layout_marginTop="1dp"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/colorDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -566,12 +570,12 @@
                     android:layout_marginBottom="2dp"
                     android:text="Priority"
                     android:textAlignment="textStart"
-                    android:textColor="@color/colorGray"
+                    android:textColor="@color/colorWhite"
                     android:textSize="17sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/priorityActionButton"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/priorityBoxDivTop" />
 
                 <ImageButton
                     android:id="@+id/priorityActionButton"
@@ -582,22 +586,24 @@
                     android:layout_marginBottom="2dp"
                     android:backgroundTint="@color/colorDarkGray"
                     android:clickable="true"
+                    android:onClick="setFrequency"
                     app:backgroundTint="@color/colorDarkGray"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/priorityTextView"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/priorityBoxDivTop"
                     app:srcCompat="@drawable/baseline_keyboard_arrow_right_24" />
 
                 <View
                     android:id="@+id/priorityBoxDivBottom"
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
-                    android:layout_marginBottom="2dp"
-                    android:background="@color/colorPrimary"
+                    android:layout_marginBottom="0dp"
+                    android:background="@color/colorDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/priorityActionButton" />
+                    app:layout_constraintTop_toBottomOf="@id/priorityActionButton"
+                    app:layout_constraintBottom_toBottomOf="@id/priorityBox"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -725,4 +725,21 @@ public class DetailsActivity extends AppCompatActivity {
         }
         finish();
     }
+
+    public void setFrequency(View view) {
+        // get the intent to pass data to the details activity
+        Intent intent = new Intent(this, FrequencyActivity.class);
+        // get the index into the Reminders ArrayList
+        //int index = Integer.parseInt((String)view.getTag());
+        // set the arguments to pass to the activity
+        //setDetailsActivityArgs(intent, index);
+        // call the activity with the intent
+        startActivityForResult(intent, MainActivity.RESULT_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

@@ -360,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
         // call the activity with the intent
         startActivityForResult(intent, RESULT_CODE);
     }
-    
+
     // to do:
     // 1. issue: need to make it so a notification is not set if the date/time is past the current date/time?
     // kind of done but need to handle repeating notifications
@@ -370,6 +370,9 @@ public class MainActivity extends AppCompatActivity {
     // 2. format the notification
     // 3. deal with frequency field and update notifications(Once, daily, weekly, etc.)
     // 4. look into running these as services or background processes??
+    // 5. set up location notifications
+    // 6. may want to set up different views such as today, this month, etc.
+    // 7. may want to move some things to background processes
 
     // this method will be called if remindAtDate or remindAtTime is true upon return
     // from the details activity
