@@ -73,7 +73,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/reminderNotesBox"
+                android:id="@+id/frequencyBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
@@ -95,20 +95,36 @@
 
                 <TextView
                     android:id="@+id/neverText"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginRight="16dp"
                     android:background="@null"
                     android:elevation="@dimen/cardview_default_elevation"
+                    android:onClick="setRepeatValue"
+                    android:tag="1"
                     android:text="Never"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/divider2"
+                    app:layout_constraintEnd_toStartOf="@id/neverCheck"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider1" />
+
+                <ImageButton
+                    android:id="@+id/neverCheck"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:backgroundTint="@color/colorDarkGray"
+                    android:clickable="true"
+                    android:onClick="setRepeatValue"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/colorDarkGray"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/neverText"
+                    app:layout_constraintTop_toBottomOf="@id/divider1"
+                    app:srcCompat="@drawable/baseline_done_24" />
 
                 <View
                     android:id="@+id/divider2"
@@ -117,27 +133,44 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:background="@color/colorDivider"
+                    android:tag="1"
+                    app:layout_constraintBottom_toTopOf="@id/dailyText"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/dailyText"
                     app:layout_constraintTop_toBottomOf="@id/neverText" />
 
                 <TextView
                     android:id="@+id/dailyText"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
                     android:background="@null"
                     android:gravity="start|top"
+                    android:onClick="setRepeatValue"
+                    android:tag="2"
                     android:text="Daily"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/divider3"
+                    app:layout_constraintEnd_toStartOf="@id/dailyCheck"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+                <ImageButton
+                    android:id="@+id/dailyCheck"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:backgroundTint="@color/colorDarkGray"
+                    android:clickable="true"
+                    android:onClick="setRepeatValue"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/colorDarkGray"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/dailyText"
+                    app:layout_constraintTop_toBottomOf="@id/divider2"
+                    app:srcCompat="@drawable/baseline_done_24" />
 
                 <View
                     android:id="@+id/divider3"
@@ -153,20 +186,36 @@
 
                 <TextView
                     android:id="@+id/weeklyText"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
                     android:background="@null"
                     android:gravity="start|top"
+                    android:onClick="setRepeatValue"
+                    android:tag="3"
                     android:text="Weekly"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/divider4"
+                    app:layout_constraintEnd_toStartOf="@id/weeklyCheck"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider3" />
+
+                <ImageButton
+                    android:id="@+id/weeklyCheck"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:backgroundTint="@color/colorDarkGray"
+                    android:clickable="true"
+                    android:onClick="setRepeatValue"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/colorDarkGray"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/weeklyText"
+                    app:layout_constraintTop_toBottomOf="@id/divider3"
+                    app:srcCompat="@drawable/baseline_done_24" />
 
                 <View
                     android:id="@+id/divider4"
@@ -182,20 +231,37 @@
 
                 <TextView
                     android:id="@+id/biWeeklyText"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:background="@null"
                     android:gravity="start|top"
+                    android:onClick="setRepeatValue"
+                    android:tag="4"
                     android:text="Biweekly"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/divider5"
+                    app:layout_constraintEnd_toStartOf="@id/biWeeklyCheck"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider4" />
+
+                <ImageButton
+                    android:id="@+id/biWeeklyCheck"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:backgroundTint="@color/colorDarkGray"
+                    android:clickable="true"
+                    android:onClick="setRepeatValue"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/colorDarkGray"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/biWeeklyText"
+                    app:layout_constraintTop_toBottomOf="@id/divider4"
+                    app:srcCompat="@drawable/baseline_done_24" />
 
                 <View
                     android:id="@+id/divider5"
@@ -211,20 +277,38 @@
 
                 <TextView
                     android:id="@+id/monthlyText"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:background="@null"
                     android:gravity="start|top"
+                    android:onClick="setRepeatValue"
+                    android:tag="5"
                     android:text="Monthly"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/divider6"
+                    app:layout_constraintEnd_toStartOf="@id/monthlyCheck"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider5" />
+
+                <ImageButton
+                    android:id="@+id/monthlyCheck"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:backgroundTint="@color/colorDarkGray"
+                    android:clickable="true"
+                    android:onClick="setRepeatValue"
+                    android:tag="5"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/colorDarkGray"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/monthlyText"
+                    app:layout_constraintTop_toBottomOf="@id/divider5"
+                    app:srcCompat="@drawable/baseline_done_24" />
 
                 <View
                     android:id="@+id/divider6"
@@ -240,20 +324,36 @@
 
                 <TextView
                     android:id="@+id/month3Text"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
                     android:background="@null"
                     android:gravity="start|top"
+                    android:onClick="setRepeatValue"
+                    android:tag="6"
                     android:text="Every 3 Months"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/divider7"
+                    app:layout_constraintEnd_toStartOf="@id/month3Check"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider6" />
+
+                <ImageButton
+                    android:id="@+id/month3Check"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:backgroundTint="@color/colorDarkGray"
+                    android:clickable="true"
+                    android:onClick="setRepeatValue"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/colorDarkGray"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/month3Text"
+                    app:layout_constraintTop_toBottomOf="@id/divider6"
+                    app:srcCompat="@drawable/baseline_done_24" />
 
                 <View
                     android:id="@+id/divider7"
@@ -269,20 +369,36 @@
 
                 <TextView
                     android:id="@+id/halfYearText"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
                     android:background="@null"
                     android:gravity="start|top"
+                    android:onClick="setRepeatValue"
+                    android:tag="7"
                     android:text="Every 6 Months"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/divider8"
+                    app:layout_constraintEnd_toStartOf="@id/halfYearCheck"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider7" />
+
+                <ImageButton
+                    android:id="@+id/halfYearCheck"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:backgroundTint="@color/colorDarkGray"
+                    android:clickable="true"
+                    android:onClick="setRepeatValue"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/colorDarkGray"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/halfYearText"
+                    app:layout_constraintTop_toBottomOf="@id/divider7"
+                    app:srcCompat="@drawable/baseline_done_24" />
 
                 <View
                     android:id="@+id/divider8"
@@ -298,20 +414,37 @@
 
                 <TextView
                     android:id="@+id/yearlyText"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
                     android:background="@null"
                     android:gravity="start|top"
+                    android:onClick="setRepeatValue"
+                    android:tag="8"
                     android:text="Yearly"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/divider9"
+                    app:layout_constraintEnd_toStartOf="@id/yearlyCheck"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider8" />
+
+                <ImageButton
+                    android:id="@+id/yearlyCheck"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:backgroundTint="@color/colorDarkGray"
+                    android:clickable="true"
+                    android:onClick="setRepeatValue"
+                    android:tag="8"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/colorDarkGray"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/yearlyText"
+                    app:layout_constraintTop_toBottomOf="@id/divider8"
+                    app:srcCompat="@drawable/baseline_done_24" />
 
                 <View
                     android:id="@+id/divider9"

@@ -387,6 +387,7 @@
                     app:layout_constraintStart_toEndOf="@id/timeTextView"
                     app:layout_constraintTop_toBottomOf="@id/timeSwitchTextDivider" />
 
+
                 <View
                     android:id="@+id/timeTextPickerDivider"
                     android:layout_width="match_parent"
@@ -476,14 +477,71 @@
                     app:layout_constraintTop_toBottomOf="@id/timeTextPickerDivider" />
 
                 <View
+                    android:id="@+id/timeBottomDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height=".5dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/colorDivider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/hourPicker"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/repeatText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:onClick="setFrequency"
+                    android:text="Repeat"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="17sp"
+                    app:layout_constraintEnd_toStartOf="@id/repeatSetText"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/timeBottomDivider" />
+
+                <TextView
+                    android:id="@+id/repeatSetText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="2dp"
+                    android:onClick="setFrequency"
+                    android:text="Never"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/colorGray"
+                    android:textSize="17sp"
+                    app:layout_constraintEnd_toStartOf="@id/repeatActionButton"
+                    app:layout_constraintStart_toEndOf="@id/repeatText"
+                    app:layout_constraintTop_toBottomOf="@id/timeBottomDivider" />
+
+
+                <ImageButton
+                    android:id="@+id/repeatActionButton"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="6dp"
+                    android:backgroundTint="@color/colorDarkGray"
+                    android:clickable="true"
+                    android:onClick="setFrequency"
+                    app:backgroundTint="@color/colorDarkGray"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/repeatSetText"
+                    app:layout_constraintTop_toBottomOf="@id/timeBottomDivider"
+                    app:srcCompat="@drawable/baseline_keyboard_arrow_right_24" />
+
+                <View
                     android:id="@+id/reminderBottomDivider"
                     android:layout_width="match_parent"
                     android:layout_height=".5dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="9dp"
                     android:background="@color/colorDivider"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/hourPicker"
+                    app:layout_constraintTop_toBottomOf="@id/repeatText"
                     app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 

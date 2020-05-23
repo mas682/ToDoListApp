@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
         int minute = 0;
         int amPm = 0;
         int UID = 0;
+        int repeat = 1;
         if(reminderString.equals(""))
         {
             UID = reminderUIdCounter;
@@ -233,9 +234,13 @@ public class MainActivity extends AppCompatActivity {
             {
                 UID = Integer.parseInt(values[1]);
             }
+            else if(i == 11)
+            {
+                repeat = Integer.parseInt(values[1]);
+            }
         }
         // create a new reminder
-        Reminder tempReminder = new Reminder(reminder, day, month, year, remindOnDay, remindAtTime, hour, minute, amPm, UID);
+        Reminder tempReminder = new Reminder(reminder, day, month, year, remindOnDay, remindAtTime, hour, minute, amPm, UID, repeat);
 
         if(reminders == null)
         {
@@ -348,6 +353,8 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("minute", tempReminder.getMinute());
         // get am/pm
         intent.putExtra("amPm", tempReminder.getAmPm());
+        // get repeat
+        intent.putExtra("repeat", tempReminder.getRepeat());
     }
 
     public void setDetails(View view) {
@@ -369,6 +376,9 @@ public class MainActivity extends AppCompatActivity {
         // this may work already as you reset the time if time not set...
     // 2. format the notification
     // 3. deal with frequency field and update notifications(Once, daily, weekly, etc.)
+        // - done with setting up ui, returning values between screens, saving value on app close
+        // need to deal with setting notifications to execute based off this repeat
+        // also need to add field for when to stop repeat
     // 4. look into running these as services or background processes??
     // 5. set up location notifications
     // 6. may want to set up different views such as today, this month, etc.
@@ -473,6 +483,8 @@ public class MainActivity extends AppCompatActivity {
         int updatedMinute = data.getIntExtra("minute", 0);
         // get returned AM/PM
         int updatedAmPm = data.getIntExtra("amPm", 0);
+        // get the returned repeat
+        int updatedRepeat = data.getIntExtra("repeat", 1);
         if(index != -1)
         {
             Reminder tempReminder = reminders.get(index);
@@ -487,6 +499,7 @@ public class MainActivity extends AppCompatActivity {
             tempReminder.setHour(updatedHour);
             tempReminder.setMinute(updatedMinute);
             tempReminder.setAmPm(updatedAmPm);
+            tempReminder.setRepeat(updatedRepeat);
             // get the view id from the reminder
             EditText tempView = (EditText)findViewById(reminders.get(index).getTextId());
             // update the view, this will also call setNotification as the view listener kicks off

@@ -11,9 +11,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+
+import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,6 +51,8 @@ public class DetailsActivity extends AppCompatActivity {
         int minute = intent.getIntExtra("minute", 0);
         // get am/pm
         int amPm = intent.getIntExtra("amPm", 0);
+        // get the repeat value
+        int repeat = intent.getIntExtra("repeat", 1);
         // set to 0 as the UID does not matter here
         int UID = 0;
         // if day is -1, no date has been set for this reminder yet, so use the current date
@@ -67,7 +72,7 @@ public class DetailsActivity extends AppCompatActivity {
             remindAtTime = false;
         }
         // create the reminder object
-        reminder = new Reminder(reminderText, day, month, year, remindOnDay, remindAtTime, hour, minute, amPm, UID);
+        reminder = new Reminder(reminderText, day, month, year, remindOnDay, remindAtTime, hour, minute, amPm, UID, repeat);
         // get the remindOnDay switch
         SwitchCompat daySwitch = (SwitchCompat)findViewById(R.id.daySwitch);
         SwitchCompat timeSwitch = (SwitchCompat)findViewById(R.id.timeSwitch);
@@ -291,6 +296,10 @@ public class DetailsActivity extends AppCompatActivity {
         View daySwitchTextDivider = findViewById(R.id.daySwitchTextDivider);
         View textNumPickerDivider = findViewById(R.id.textNumPickerDivider);
         SwitchCompat timeSwitch = (SwitchCompat)findViewById(R.id.timeSwitch);
+        TextView repeatText = (TextView)findViewById(R.id.repeatText);
+        TextView repeatSetText = (TextView)findViewById(R.id.repeatSetText);
+        ImageButton repeatButton = (ImageButton)findViewById(R.id.repeatActionButton);
+        View repeatDiv = findViewById(R.id.timeBottomDivider);
         if(remindSwitch.isChecked())
         {
             alarmText.setVisibility(View.VISIBLE);
@@ -298,6 +307,12 @@ public class DetailsActivity extends AppCompatActivity {
             daySwitchTextDivider.setVisibility(View.VISIBLE);
             textNumPickerDivider.setVisibility(View.VISIBLE);
             timeSwitch.setVisibility(View.VISIBLE);
+            repeatText.setVisibility(View.VISIBLE);
+            repeatSetText.setVisibility(View.VISIBLE);
+            repeatButton.setVisibility(View.VISIBLE);
+            repeatDiv.setVisibility(View.VISIBLE);
+            String repeatString = getRepeatString(reminder.getRepeat());
+            repeatSetText.setText(repeatString);
             // if this is checked, remindOnDay should be true
             reminder.setRemindOnADay(true);
             // update the date string being displayed to the current date
@@ -322,6 +337,11 @@ public class DetailsActivity extends AppCompatActivity {
             daySwitchTextDivider.setVisibility(View.GONE);
             textNumPickerDivider.setVisibility(View.GONE);
             timeSwitch.setVisibility(View.GONE);
+            timeSwitch.setVisibility(View.GONE);
+            repeatText.setVisibility(View.GONE);
+            repeatSetText.setVisibility(View.GONE);
+            repeatButton.setVisibility(View.GONE);
+            repeatDiv.setVisibility(View.GONE);
             reminder.setRemindOnADay(false);
             // if the time switch is set to visible, set to not visible
             if(timeSwitch.isChecked())
@@ -707,6 +727,7 @@ public class DetailsActivity extends AppCompatActivity {
             reminder.setHour(0);
             reminder.setMinute(0);
             reminder.setAmPm(0);
+            reminder.setRepeat(1);
         }
         intentWithResult.putExtra("month", reminder.getMonth());
         intentWithResult.putExtra("day", reminder.getDay());
@@ -715,6 +736,7 @@ public class DetailsActivity extends AppCompatActivity {
         intentWithResult.putExtra("hour", reminder.getHour());
         intentWithResult.putExtra("minute", reminder.getMinute());
         intentWithResult.putExtra("amPm", reminder.getAmPm());
+        intentWithResult.putExtra("repeat", reminder.getRepeat());
         if(notificationInvoked)
         {
             startActivity(intentWithResult);
@@ -729,6 +751,7 @@ public class DetailsActivity extends AppCompatActivity {
     public void setFrequency(View view) {
         // get the intent to pass data to the details activity
         Intent intent = new Intent(this, FrequencyActivity.class);
+        intent.putExtra("repeat", reminder.getRepeat());
         // get the index into the Reminders ArrayList
         //int index = Integer.parseInt((String)view.getTag());
         // set the arguments to pass to the activity
@@ -741,5 +764,48 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
+        int updatedRepeat = data.getIntExtra("repeat", 1);
+        reminder.setRepeat(updatedRepeat);
+        String repeatText = getRepeatString(updatedRepeat);
+        TextView repeatSetText = (TextView)findViewById(R.id.repeatSetText);
+        repeatSetText.setText(repeatText);
+    }
+
+    public String getRepeatString(int repeatValue)
+    {
+        String repeatText = "Never";
+        if(repeatValue == 1)
+        {
+            repeatText = "Never";
+        }
+        else if(repeatValue == 2)
+        {
+            repeatText = "Daily";
+        }
+        else if(repeatValue == 3)
+        {
+            repeatText = "Weekly";
+        }
+        else if(repeatValue == 4)
+        {
+            repeatText = "Biweekly";
+        }
+        else if(repeatValue == 5)
+        {
+            repeatText = "Monthly";
+        }
+        else if(repeatValue == 6)
+        {
+            repeatText = "Every 3 Months";
+        }
+        else if(repeatValue == 7)
+        {
+            repeatText = "Every 6 Months";
+        }
+        else if(repeatValue == 8)
+        {
+            repeatText = "Yearly";
+        }
+        return repeatText;
     }
 }

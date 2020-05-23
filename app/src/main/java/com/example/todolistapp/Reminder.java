@@ -15,7 +15,7 @@ public class Reminder {
     private int hour;
     private int minute;
     private int amPm;
-    private String repeat;
+    private int repeat;
     private String priority;
     private int textId;
     private int UID;
@@ -38,12 +38,12 @@ public class Reminder {
         hour = 0;
         minute = 0;
         amPm = 0;
-        repeat = "";
+        repeat = 1;
         priority = "";
         this.UID = UID;
     }
 
-    public Reminder(String text, int day, int month, int year, boolean remindOnDay, boolean remindAtTime, int hour, int minute, int amPm, int UID)
+    public Reminder(String text, int day, int month, int year, boolean remindOnDay, boolean remindAtTime, int hour, int minute, int amPm, int UID, int repeat)
     {
         reminder = text;
         notes = "";
@@ -57,7 +57,7 @@ public class Reminder {
         this.hour = hour;
         this.minute = minute;
         this.amPm = amPm;
-        repeat = "";
+        this.repeat = repeat;
         priority = "";
         this.UID = UID;
     }
@@ -76,10 +76,8 @@ public class Reminder {
 
     public String toString()
     {
-        // this needs updates, and then will have to update the main page as well
-        //return "reminder:" + reminder + ";notes:" + notes + ";\n";
         return "reminder:" + reminder + ";notes:" + notes + ";remindOnDay:" + remindOnDay + ";month:" + month + ";day:" + day + ";year:" + year + ";remindAtTime:" +
-                remindAtTime + ";hour:" + hour + ";minute:" + minute + ";amPm:" + amPm + ";UID:" + UID + "\n";
+                remindAtTime + ";hour:" + hour + ";minute:" + minute + ";amPm:" + amPm + ";UID:" + UID + ";repeat:" + repeat + "\n";
     }
 
     public int getTextId()
@@ -178,6 +176,16 @@ public class Reminder {
     public void setUID(int UID)
     {
         this.UID = UID;
+    }
+
+    public void setRepeat(int repeat)
+    {
+        this.repeat = repeat;
+    }
+
+    public int getRepeat()
+    {
+        return repeat;
     }
 
 }
