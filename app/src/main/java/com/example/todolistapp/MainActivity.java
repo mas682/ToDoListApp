@@ -377,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
     // 2. format the notification
     // 3. deal with frequency field and update notifications(Once, daily, weekly, etc.)
         // - done with setting up ui, returning values between screens, saving value on app close
-        // need to deal with setting notifications to execute based off this repeat
+        // need to deal with setting notifications to execute based off this repeat - done
         // also need to add field for when to stop repeat
     // 4. look into running these as services or background processes??
     // 5. set up location notifications
@@ -432,7 +432,47 @@ public class MainActivity extends AppCompatActivity {
         // set a alarm to cause the notification to be created at the specified time
         alarmManager.set(AlarmManager.RTC_WAKEUP, delay, pendingIntent);
         // to set repeating notifications, use this method
-        //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, delay, AlarmManager., pendingIntent);
+        // never repeat
+        int repeat = tempReminder.getRepeat();
+        if(repeat == 1)
+        {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, delay, pendingIntent);
+        }
+        // daily
+        else if(repeat == 2)
+        {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, delay, AlarmManager.INTERVAL_DAY, pendingIntent);
+        }
+        // weekly
+        else if(repeat == 3)
+        {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, delay, AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+        }
+        // biweekly
+        else if(repeat == 4)
+        {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, delay, AlarmManager.INTERVAL_DAY * 14, pendingIntent);
+        }
+        // monthly
+        else if(repeat == 5)
+        {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, delay, AlarmManager.INTERVAL_DAY * 30, pendingIntent);
+        }
+        // 3 months
+        else if(repeat == 6)
+        {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, delay, AlarmManager.INTERVAL_DAY * 91, pendingIntent);
+        }
+        // 6 months
+        else if(repeat == 7)
+        {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, delay, AlarmManager.INTERVAL_DAY * 182, pendingIntent);
+        }
+        // yearly
+        else if(repeat == 8)
+        {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, delay, AlarmManager.INTERVAL_DAY * 365, pendingIntent);
+        }
     }
 
     // this method is called to cancel a existing notfication
@@ -502,18 +542,19 @@ public class MainActivity extends AppCompatActivity {
             tempReminder.setRepeat(updatedRepeat);
             // get the view id from the reminder
             EditText tempView = (EditText)findViewById(reminders.get(index).getTextId());
-            // update the view, this will also call setNotification as the view listener kicks off
-            // but setNotification will not be called if remindOnDay is false
-            tempView.setText(messageReturned);
-            // if a notification previously existed for this reminder and no longer does, remove it
-            if(oldRemindOnDay && !remindOnDayUpdate)
+            // if the notification was previously set, cancel any existing ones
+            // this is done because if the reminder is updated and a notification already
+            // happened, if the notification was not clicked on yet, it may not match the
+            // current state of the reminder.  This will remove it.
+            if(oldRemindOnDay)
             {
                 cancelNotification(tempReminder.getUID());
             }
+            // update the view, this will also call setNotification as the view listener kicks off
+            // but setNotification will not be called if remindOnDay is false
+            tempView.setText(messageReturned);
             // also have to deal with case where remind on day still set but remind at time no longer set
         }
-        // for testing
-        System.out.println("Result code = " + resultCode);
     }
 
     /** Called when the user taps the Send button */
@@ -844,6 +885,7 @@ public class MainActivity extends AppCompatActivity {
                 // not updated when it goes off
                 if(reminder.getRemindOnADay()) {
                     // create a calendar for the notification time
+                    /*
                     Calendar cal = Calendar.getInstance();
                     cal.set(Calendar.MONTH, reminder.getMonth());
                     cal.set(Calendar.DATE, reminder.getDay());
@@ -853,12 +895,15 @@ public class MainActivity extends AppCompatActivity {
                     cal.set(Calendar.SECOND, 0);
                     // get the current time/date
                     Calendar current = Calendar.getInstance();
+                     */
                     // if the notification did not happen yet
                     // eventually will have to deal with repeating notifications
-                    if(current.compareTo(cal) <= 0)
-                    {
+                    //if(current.compareTo(cal) <= 0)
+                    //{
+                        // no longer checking time as it will just go off once if in past
+                        // this simplifies changing the frequency of the notification
                         setNotification(reminder, index);
-                    }
+                    //}
                 }
             }
         });
